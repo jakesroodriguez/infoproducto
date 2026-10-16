@@ -3592,7 +3592,7 @@
   }
 };
 
-    let currentDay = 2; // Default to Day 2 (Today)
+    let currentDay = 1; // Default to Day 1
     let currentWeek = 1;
 
     // 1. DYNAMIC ISLAND REAL-TIME CLOCKS
@@ -3884,6 +3884,8 @@
     const KV_SET_BASE = 'https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/r0g6lh3c/elena_30d_hex/';
     const NTFY_TOPIC = 'elena_vance_studio_sync_98234792';
     const CLIENT_ID = 'c_' + Math.random().toString(36).substring(2, 9);
+    let lastLocalChangeTime = 0;
+    let isPushing = false;
 
     function getDayDoneCount(d) {
       let done = 0;
@@ -3929,52 +3931,126 @@
       return changed;
     }
 
+    function styleCheckboxLabel(el) {
+      if (!el || !el.parentElement) return;
+      const label = el.parentElement;
+      const span = label.querySelector('span');
+      if (el.checked) {
+        label.className = 'flex items-center gap-2 cursor-pointer bg-emerald-100 hover:bg-emerald-200 px-3 py-1.5 rounded-full border border-emerald-400 transition shrink-0 shadow-xs';
+        if (span) {
+          span.className = 'text-xs font-extrabold text-emerald-900';
+          span.innerText = el.id.includes('-s') ? '✓ Subida' : '✓ Listo';
+        }
+      } else {
+        label.className = 'flex items-center gap-2 cursor-pointer bg-gray-50 hover:bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200 transition shrink-0';
+        if (span) {
+          span.className = 'text-xs font-bold text-gray-700';
+          span.innerText = el.id.includes('-s') ? 'Subida' : 'Listo';
+        }
+      }
+    }
+
     async function pushCloudState(actionLabel) {
       const hex = getLocalHexState();
+      lastLocalChangeTime = Date.now();
+      isPushing = true;
+
       const statusLabel = document.getElementById('sync-status-label');
       const statusDot = document.getElementById('sync-status-dot');
       if (statusLabel) statusLabel.innerText = 'Sincronizando...';
       if (statusDot) statusDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping';
 
+      const payload = {
+        clientId: CLIENT_ID,
+        hex: hex,
+        day: currentDay,
+        label: actionLabel,
+        ts: Date.now()
+      };
+
       try {
-        await fetch(KV_SET_BASE + hex, { method: 'POST' });
-        await fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
-          method: 'POST',
-          body: JSON.stringify({
-            clientId: CLIENT_ID,
-            hex: hex,
-            day: currentDay,
-            label: actionLabel,
-            ts: Date.now()
+        await Promise.allSettled([
+          fetch('/api/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          }),
+          fetch(KV_SET_BASE + hex, { method: 'POST' }),
+          fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
+            method: 'POST',
+            body: JSON.stringify(payload)
           })
-        });
+        ]);
         if (statusLabel) statusLabel.innerText = 'Sync Equipo Activo';
         if (statusDot) statusDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
       } catch (err) {
         console.warn('Error syncing cloud state:', err);
         if (statusLabel) statusLabel.innerText = 'Guardado Local';
+      } finally {
+        isPushing = false;
+        lastLocalChangeTime = Date.now();
       }
     }
 
-    async function pullCloudState(isInitial = false) {
+    async function fetchLatestCloudHex() {
+      // 1. Try first-party Vercel API (/api/sync) - immune to adblockers/Brave Shields
+      try {
+        const apiRes = await fetch('/api/sync?t=' + Date.now(), { cache: 'no-store' });
+        if (apiRes.ok) {
+          const data = await apiRes.json();
+          if (data && data.hex && data.hex.length === 30) {
+            return data.hex;
+          }
+        }
+      } catch (e) {}
+
+      // 2. Fallback: Ntfy message history
+      try {
+        const ntfyRes = await fetch(`https://ntfy.sh/${NTFY_TOPIC}/json?poll=1&since=all&t=${Date.now()}`, { cache: 'no-store' });
+        if (ntfyRes.ok) {
+          const text = await ntfyRes.text();
+          const lines = text.trim().split('\n');
+          let latestHex = null;
+          let latestTs = 0;
+          for (const line of lines) {
+            if (!line.trim()) continue;
+            try {
+              const evt = JSON.parse(line);
+              if (evt.event === 'message' && evt.message) {
+                const msg = JSON.parse(evt.message);
+                if (msg.hex && msg.hex.length === 30 && (msg.ts || 0) >= latestTs) {
+                  latestHex = msg.hex;
+                  latestTs = msg.ts || 1;
+                }
+              }
+            } catch (e) {}
+          }
+          if (latestHex) return latestHex;
+        }
+      } catch (e) {}
+
+      // 3. Fallback: KeyVal direct
       try {
         const res = await fetch(KV_GET_URL + '?t=' + Date.now(), { cache: 'no-store' });
-        if (!res.ok) return;
-        let hex = await res.text();
-        hex = hex.replace(/"/g, '').trim();
+        if (res.ok) {
+          const hex = (await res.text()).replace(/"/g, '').trim();
+          if (hex && hex.length === 30) return hex;
+        }
+      } catch (e) {}
+
+      return null;
+    }
+
+    async function pullCloudState(isInitial = false) {
+      if (isPushing || (Date.now() - lastLocalChangeTime < 2500)) return;
+      try {
+        const hex = await fetchLatestCloudHex();
+        if (isPushing || (Date.now() - lastLocalChangeTime < 2500)) return;
         if (hex && hex.length === 30) {
-          const localHex = getLocalHexState();
-          // If cloud is still blank on first load but user already checked items locally, seed cloud
-          if (isInitial && hex === '000000000000000000000000000000' && localHex !== '000000000000000000000000000000') {
-            pushCloudState('Sincronización inicial');
-            return;
-          }
-          const changed = applyHexStateToLocal(hex);
-          if (changed) {
-            restoreCheckboxes(currentDay);
-            updateDailyProgress();
-            renderDayTabs();
-          }
+          applyHexStateToLocal(hex);
+          restoreCheckboxes(currentDay);
+          updateDailyProgress();
+          renderDayTabs();
         }
       } catch (err) {
         console.warn('Could not pull cloud state:', err);
@@ -4016,6 +4092,7 @@
       } else {
         localStorage.removeItem(`elena_d${currentDay}_${id}`);
       }
+      styleCheckboxLabel(chk);
       updateDailyProgress();
       renderDayTabs();
       const itemLabel = CHECK_LABELS[id] || 'Tarea';
@@ -4029,6 +4106,7 @@
         const el = document.getElementById(id);
         if (el) {
           el.checked = localStorage.getItem(`elena_d${d}_${id}`) === 'true';
+          styleCheckboxLabel(el);
         }
       });
     }
@@ -4051,6 +4129,7 @@
           if (el) {
             el.checked = false;
             localStorage.removeItem(`elena_d${currentDay}_${id}`);
+            styleCheckboxLabel(el);
           }
         });
         updateDailyProgress();
@@ -4112,16 +4191,16 @@
     }
 
     // INITIALIZATION
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       updateIslandClocks();
       setInterval(updateIslandClocks, 1000);
       switchWeek(1);
-      selectDay(2); // Start on Day 2 (Today)
+      selectDay(1); // Start on Day 1
 
       // Cloud team sync initialization
-      pullCloudState(true);
+      await pullCloudState(true);
       subscribeRealtimeSync();
-      setInterval(() => pullCloudState(false), 12000);
+      setInterval(() => pullCloudState(false), 4000);
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden) pullCloudState(false);
       });
