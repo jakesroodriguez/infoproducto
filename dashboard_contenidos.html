@@ -46,10 +46,6 @@
       }
     }
   </script>
-  <!-- Three.js & GLTFLoader for Real-Time Blender 5.2 3D Engine -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-
   <style>
     body { background-color: #F5F4F0; color: #141815; }
     .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -57,98 +53,52 @@
     .custom-scroll::-webkit-scrollbar-thumb { background: #CBD5CD; border-radius: 4px; }
 
     /* ======================================================== */
-    /* 3D LIQUID OBSIDIAN DYNAMIC ISLAND ENGINE                 */
+    /* ULTRA-MINIMALIST DYNAMIC ISLAND                          */
     /* ======================================================== */
-    :root {
-      --mx: 50%;
-      --my: 50%;
-      --rx: 0deg;
-      --ry: 0deg;
-    }
-
-    .island-perspective-stage {
-      perspective: 1200px;
-      transform-style: preserve-3d;
-    }
-
-    .island-3d-shell {
-      position: relative;
-      background: linear-gradient(165deg, rgba(16, 21, 18, 0.94) 0%, rgba(9, 12, 10, 0.97) 100%);
-      backdrop-filter: blur(28px) saturate(190%);
-      -webkit-backdrop-filter: blur(28px) saturate(190%);
-      transform: rotateX(var(--rx)) rotateY(var(--ry)) translateZ(0);
+    .island-shell {
+      background: rgba(13, 16, 14, 0.92);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 26px;
+      box-shadow: 0 12px 32px -8px rgba(10, 14, 11, 0.45), 0 1px 2px rgba(0, 0, 0, 0.2);
       transition:
-        transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
-        border-radius 0.55s cubic-bezier(0.22, 1.35, 0.36, 1),
-        box-shadow 0.4s ease;
-      box-shadow:
-        0 24px 48px -12px rgba(8, 12, 9, 0.62),
-        0 4px 16px -2px rgba(16, 185, 129, 0.12),
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
-        inset 0 -1px 0 0 rgba(16, 185, 129, 0.14);
-      overflow: hidden;
+        border-radius 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.28s ease,
+        border-color 0.28s ease;
+    }
+    .island-shell.island-expanded {
+      border-radius: 20px;
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 44px -12px rgba(10, 14, 11, 0.6);
     }
 
-    .island-3d-shell::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(320px circle at var(--mx) var(--my), rgba(52, 211, 153, 0.19), rgba(229, 162, 68, 0.06) 45%, transparent 75%);
-      pointer-events: none;
-      z-index: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .island-3d-shell::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 1px;
-      background: radial-gradient(240px circle at var(--mx) var(--my), rgba(110, 231, 183, 0.65), rgba(229, 162, 68, 0.35) 45%, rgba(255, 255, 255, 0.08) 80%);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    .island-dock-btn {
-      transition: transform 0.28s cubic-bezier(0.22, 1.4, 0.36, 1), background-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    .island-dock-btn:hover {
-      transform: translateY(-2.5px) scale(1.11);
-      box-shadow: 0 8px 18px -4px rgba(16, 185, 129, 0.32);
-    }
-    .island-dock-btn:active {
-      transform: translateY(0px) scale(0.96);
+    .island-btn {
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
     }
 
     .island-drawer {
       max-height: 0;
       opacity: 0;
-      transform: translateY(-8px) scale(0.98);
+      overflow: hidden;
       transition:
-        max-height 0.55s cubic-bezier(0.22, 1.25, 0.36, 1),
-        opacity 0.32s ease,
-        transform 0.42s cubic-bezier(0.22, 1.25, 0.36, 1),
-        padding 0.4s ease;
+        max-height 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.22s ease;
       pointer-events: none;
     }
     .island-drawer.open {
-      max-height: 440px;
+      max-height: 260px;
       opacity: 1;
-      transform: translateY(0) scale(1);
       pointer-events: auto;
     }
 
-    /* Live Activity Liquid Droplet */
+    /* Minimal Live Activity Pill */
     .island-droplet {
-      transform: translateY(-18px) scale(0.75);
+      transform: translateY(-8px) scale(0.95);
       opacity: 0;
       transition:
-        transform 0.5s cubic-bezier(0.22, 1.45, 0.36, 1),
-        opacity 0.3s ease;
+        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.2s ease;
       pointer-events: none;
     }
     .island-droplet.active {
@@ -158,45 +108,23 @@
 
     /* Audio Equalizer Bars */
     @keyframes eqPulse {
-      0%, 100% { height: 4px; }
-      50% { height: 15px; }
+      0%, 100% { height: 3px; }
+      50% { height: 12px; }
     }
     .eq-bar {
-      width: 2.5px;
-      height: 4px;
+      width: 2px;
+      height: 3px;
       border-radius: 99px;
-      background: linear-gradient(to top, #10B981, #E5A244);
+      background: #34D399;
       transition: height 0.15s ease;
     }
     .eq-active .eq-bar:nth-child(1) { animation: eqPulse 0.45s ease-in-out infinite 0.0s; }
     .eq-active .eq-bar:nth-child(2) { animation: eqPulse 0.38s ease-in-out infinite 0.12s; }
     .eq-active .eq-bar:nth-child(3) { animation: eqPulse 0.52s ease-in-out infinite 0.22s; }
     .eq-active .eq-bar:nth-child(4) { animation: eqPulse 0.41s ease-in-out infinite 0.07s; }
-
-    /* Shimmer effect for progress bar */
-    @keyframes liquidShimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-    .liquid-bar {
-      background: linear-gradient(90deg, #10B981 0%, #6EE7B7 45%, #E5A244 75%, #10B981 100%);
-      background-size: 200% 100%;
-      animation: liquidShimmer 3.5s linear infinite;
-    }
   </style>
 </head>
-<body class="font-sans antialiased min-h-screen pt-28 pb-20 selection:bg-sage-200 selection:text-sage-900">
-
-  <!-- SVG Gooey Filter for Liquid Morphing -->
-  <svg class="hidden" width="0" height="0" aria-hidden="true">
-    <defs>
-      <filter id="island-gooey">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
-        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo" />
-        <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-      </filter>
-    </defs>
-  </svg>
+<body class="font-sans antialiased min-h-screen pt-20 pb-20 selection:bg-sage-200 selection:text-sage-900">
 
   <!-- ========================================== -->
   <!-- 0. LOGIN SCREEN MODAL (MARKEL & JAKES)     -->
@@ -245,123 +173,180 @@
   </div>
 
   <!-- ========================================================= -->
-  <!-- 1. POLYMORPHIC 3D DYNAMIC ISLAND (BLENDER 5.2 + WEBGL)    -->
+  <!-- 1. ULTRA-MINIMALIST DYNAMIC ISLAND (CUSTOM SVG VECTORS)   -->
   <!-- ========================================================= -->
-  <aside class="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-5xl island-perspective-stage">
-    <div id="island-shell" class="island-3d-shell rounded-[30px] px-3.5 sm:px-5 py-2 text-white">
+  <aside class="fixed top-3.5 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[96vw]">
+    <div id="island-shell" class="island-shell px-3 py-1.5 text-white">
       
-      <!-- TOP COMPACT BAR -->
-      <div class="relative z-10 flex items-center justify-between gap-2 sm:gap-4">
+      <!-- TOP SINGLE-LINE COMPACT BAR -->
+      <div class="flex items-center justify-between gap-2 sm:gap-2.5 whitespace-nowrap">
         
-        <!-- LEFT: 3D BLENDER ORB + STUDIO STATUS +CLICK TO EXPAND -->
-        <div onclick="toggleIslandCommandCenter()" class="flex items-center gap-2.5 sm:gap-3 cursor-pointer group select-none" title="Haz clic para abrir el Centro de Mando 3D">
-          
-          <!-- Live WebGL 3D Orb Container (Blender 5.2 GLB) -->
-          <div class="relative w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500/20 via-sage-700/20 to-amber-500/15 border border-emerald-400/30 flex items-center justify-center shrink-0 shadow-inner group-hover:border-emerald-400/70 transition overflow-hidden">
-            <canvas id="island-3d-canvas" width="80" height="80" class="w-10 h-10 block"></canvas>
-            <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-charcoal-950 animate-pulse"></span>
-          </div>
-          
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs sm:text-sm font-bold tracking-tight font-serif bg-gradient-to-r from-white via-emerald-100 to-amber-200 bg-clip-text text-transparent group-hover:text-emerald-300 transition">
-                Elena Vance 3D
-              </span>
-              <div id="island-status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-              <!-- Audio Equalizer (Active when Elena speaks) -->
-              <div id="island-eq" class="hidden items-end gap-0.5 h-3.5 px-1">
-                <div class="eq-bar"></div>
-                <div class="eq-bar"></div>
-                <div class="eq-bar"></div>
-                <div class="eq-bar"></div>
-              </div>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <span id="island-status-text" class="text-[10px] text-gray-400 hidden sm:block font-medium">Motor 3D Activo</span>
-              <span class="text-[9px] text-emerald-400/80 hidden md:inline font-mono">• Click Panel ⌄</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- CENTER: TRANSATLANTIC DUAL CLOCK + RING PROGRESS -->
-        <div onclick="toggleIslandCommandCenter()" class="flex items-center gap-2.5 bg-white/[0.05] hover:bg-white/[0.09] px-3 py-1.5 rounded-2xl border border-white/10 text-[11px] font-mono cursor-pointer transition">
-          <div class="flex items-center gap-1.5 text-gray-200">
-            <span id="island-sun-es" class="text-[11px]">☀️</span>
-            <span class="text-[9px] text-gray-400 font-sans font-extrabold">ES</span>
-            <span id="clock-es" class="font-bold">--:--</span>
-          </div>
-          <span class="text-white/20">|</span>
-          <div class="flex items-center gap-1.5 text-emerald-300 font-semibold">
-            <span id="island-sun-ny" class="text-[11px]">🌅</span>
-            <span class="text-[9px] text-emerald-400/70 font-sans font-extrabold">NY</span>
-            <span id="clock-ny" class="font-bold">--:--</span>
-          </div>
-          <!-- Mini Radial Progress Ring for Current Day -->
-          <div class="hidden sm:flex items-center gap-1.5 pl-1.5 border-l border-white/10" title="Progreso del Día Actual">
-            <svg class="w-5 h-5 -rotate-90" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="9" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2.6"></circle>
-              <circle id="island-ring-circle" cx="12" cy="12" r="9" fill="none" stroke="#34D399" stroke-width="2.6" stroke-dasharray="56.5" stroke-dashoffset="56.5" stroke-linecap="round" class="transition-all duration-500"></circle>
+        <!-- ZONE 1: BRAND EMBLEM + LIVE STATUS -->
+        <div onclick="toggleIslandCommandCenter()" class="flex items-center gap-2 cursor-pointer group select-none shrink-0 pr-0.5" title="Desplegar telemetría">
+          <!-- Custom Minimalist Botanical/Somatic SVG Emblem -->
+          <div class="w-7 h-7 rounded-full bg-white/[0.05] group-hover:bg-white/[0.09] border border-white/[0.08] flex items-center justify-center shrink-0 transition">
+            <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2.5C7.5 7 6 11.5 6 15a6 6 0 0 0 12 0c0-3.5-1.5-8-6-12.5Z"></path>
+              <path d="M12 21.5V10"></path>
+              <path d="M9 14.5l3-2.5 3 2.5"></path>
             </svg>
-            <span id="island-ring-label" class="text-[10px] font-bold text-emerald-300">0/4</span>
+          </div>
+          
+          <span class="text-xs font-semibold tracking-tight text-white/95 group-hover:text-white transition whitespace-nowrap">
+            Elena Vance
+          </span>
+
+          <span id="island-status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+
+          <!-- Minimal Audio Equalizer (Active when voice plays) -->
+          <div id="island-eq" class="hidden items-end gap-0.5 h-3 px-0.5 shrink-0 eq-active">
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
           </div>
         </div>
 
-        <!-- RIGHT: 3D DOCK MAGNIFICATION CONTROLS -->
-        <div class="flex items-center gap-1 sm:gap-1.5">
+        <div class="w-px h-3.5 bg-white/[0.08] shrink-0"></div>
+
+        <!-- ZONE 2: DUAL CLOCKS (24H) + CUSTOM SVG DAY/NIGHT + PROGRESS RING -->
+        <div onclick="toggleIslandCommandCenter()" class="flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] px-2.5 h-7 rounded-full border border-white/[0.06] text-[11px] font-mono cursor-pointer transition shrink-0 whitespace-nowrap" title="Reloj transatlántico y progreso diario">
+          <!-- ES Clock -->
+          <div class="flex items-center gap-1 text-white/85">
+            <!-- Custom SVG Sun (ES) -->
+            <svg id="icon-es-day" class="w-3 h-3 text-amber-300/90 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+            <!-- Custom SVG Moon (ES) -->
+            <svg id="icon-es-night" class="w-3 h-3 text-indigo-300/90 shrink-0 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span class="text-[9px] text-white/40 font-sans font-bold tracking-wider">ES</span>
+            <span id="clock-es" class="font-medium tracking-tight">--:--</span>
+          </div>
+
+          <span class="text-white/15">·</span>
+
+          <!-- NY Clock -->
+          <div class="flex items-center gap-1 text-emerald-300/95">
+            <!-- Custom SVG Sun (NY) -->
+            <svg id="icon-ny-day" class="w-3 h-3 text-amber-300/90 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+            <!-- Custom SVG Moon (NY) -->
+            <svg id="icon-ny-night" class="w-3 h-3 text-indigo-300/90 shrink-0 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span class="text-[9px] text-emerald-400/55 font-sans font-bold tracking-wider">NY</span>
+            <span id="clock-ny" class="font-medium tracking-tight">--:--</span>
+          </div>
+
+          <!-- Minimal Radial Progress Ring (r=7, C=43.98) -->
+          <div class="hidden sm:flex items-center gap-1 pl-1.5 border-l border-white/[0.08]">
+            <svg class="w-3.5 h-3.5 -rotate-90 shrink-0" viewBox="0 0 20 20">
+              <circle cx="10" cy="10" r="7" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2"></circle>
+              <circle id="island-ring-circle" cx="10" cy="10" r="7" fill="none" stroke="#34D399" stroke-width="2" stroke-dasharray="43.98" stroke-dashoffset="43.98" stroke-linecap="round" class="transition-all duration-500"></circle>
+            </svg>
+            <span id="island-ring-label" class="text-[10px] font-medium text-emerald-400">0/4</span>
+          </div>
+        </div>
+
+        <div class="w-px h-3.5 bg-white/[0.08] shrink-0 hidden sm:block"></div>
+
+        <!-- ZONE 3: CUSTOM SVG QUICK LINKS -->
+        <div class="flex items-center gap-1 shrink-0">
           
           <!-- Google Flow -->
-          <a href="https://labs.google/flow" target="_blank" title="Abrir Google Flow" class="island-dock-btn p-2 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          <a href="https://labs.google/flow" target="_blank" title="Google Flow" class="island-btn w-7 h-7 rounded-full bg-white/[0.03] hover:bg-white/[0.09] border border-white/[0.06] text-white/70 hover:text-white flex items-center justify-center shrink-0">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2.5" y="5" width="13.5" height="14" rx="2.5"></rect>
+              <path d="M16 10.5l5-2.5v8l-5-2.5"></path>
             </svg>
           </a>
 
           <!-- Instagram -->
-          <a href="https://www.instagram.com" target="_blank" title="Abrir Instagram" class="island-dock-btn p-2 rounded-xl bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white hidden md:flex">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          <a href="https://www.instagram.com" target="_blank" title="Instagram" class="island-btn w-7 h-7 rounded-full bg-white/[0.03] hover:bg-white/[0.09] border border-white/[0.06] text-white/70 hover:text-white hidden md:flex items-center justify-center shrink-0">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2.5" y="2.5" width="19" height="19" rx="5"></rect>
+              <circle cx="12" cy="12" r="4"></circle>
+              <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle>
             </svg>
           </a>
 
-          <!-- Quick Web Links -->
-          <a href="/01_TIENDA_Y_WEB/landing_page.html" target="_blank" title="Ver Landing Page de Venta" class="island-dock-btn px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-emerald-500/25 border border-white/10 hover:border-emerald-400/40 text-gray-100 text-xs font-semibold flex items-center gap-1">
-            <span>🏪</span>
+          <!-- Landing Page (Custom SVG Storefront / Window) -->
+          <a href="/01_TIENDA_Y_WEB/landing_page.html" target="_blank" title="Landing Page de Venta" class="island-btn h-7 px-2.5 rounded-full bg-white/[0.03] hover:bg-white/[0.09] border border-white/[0.06] text-white/80 hover:text-white text-[11px] font-medium flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+            <svg class="w-3.5 h-3.5 text-emerald-400/90 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9.5L4.8 4h14.4L21 9.5"></path>
+              <path d="M3 9.5a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 3 0"></path>
+              <path d="M4.5 11.8V19a1.5 1.5 0 0 0 1.5 1.5h12a1.5 1.5 0 0 0 1.5-1.5v-7.2"></path>
+              <path d="M10 20.5v-5h4v5"></path>
+            </svg>
             <span class="hidden lg:inline">Landing</span>
           </a>
-          <a href="/02_PRODUCTO_GUIA/guide_printable.html" target="_blank" title="Ver Guía de 21 Días" class="island-dock-btn px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-emerald-500/25 border border-white/10 hover:border-emerald-400/40 text-gray-100 text-xs font-semibold flex items-center gap-1">
-            <span>📖</span>
+
+          <!-- Guía 21D (Custom SVG Open Editorial Book) -->
+          <a href="/02_PRODUCTO_GUIA/guide_printable.html" target="_blank" title="Guía de 21 Días" class="island-btn h-7 px-2.5 rounded-full bg-white/[0.03] hover:bg-white/[0.09] border border-white/[0.06] text-white/80 hover:text-white text-[11px] font-medium flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+            <svg class="w-3.5 h-3.5 text-emerald-400/90 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 4.5h6.5a3.5 3.5 0 0 1 3.5 3.5v12.5a2.5 2.5 0 0 0-2.5-2.5H2V4.5z"></path>
+              <path d="M22 4.5h-6.5A3.5 3.5 0 0 0 12 8v12.5a2.5 2.5 0 0 1 2.5-2.5H22V4.5z"></path>
+            </svg>
             <span class="hidden lg:inline">Guía 21D</span>
           </a>
-          <a href="/descargar.html" target="_blank" title="Descargar Video Reel Móvil" class="island-dock-btn px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-emerald-500/25 border border-white/10 hover:border-emerald-400/40 text-gray-100 text-xs font-semibold hidden sm:flex items-center gap-1">
-            <span>🎬</span>
+
+          <!-- Reel (Custom SVG Play Frame) -->
+          <a href="/descargar.html" target="_blank" title="Descargar Reel" class="island-btn h-7 px-2.5 rounded-full bg-white/[0.03] hover:bg-white/[0.09] border border-white/[0.06] text-white/80 hover:text-white text-[11px] font-medium hidden sm:flex items-center gap-1.5 shrink-0 whitespace-nowrap">
+            <svg class="w-3.5 h-3.5 text-emerald-400/90 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3.5"></rect>
+              <path d="M3 8h18"></path>
+              <path d="M8 3l2 5M14 3l2 5"></path>
+              <polygon points="10 11.5 15.5 14.5 10 17.5 10 11.5" fill="currentColor" stroke="none"></polygon>
+            </svg>
             <span class="hidden xl:inline">Reel</span>
           </a>
+        </div>
 
-          <!-- Sound Synthesizer Toggle -->
-          <button onclick="toggleIslandSfx()" id="island-sfx-btn" title="Activar/Silenciar Sonidos 3D" class="island-dock-btn p-2 rounded-xl bg-white/5 hover:bg-white/15 text-emerald-300 text-xs cursor-pointer">
-            <span id="island-sfx-icon">🔊</span>
+        <div class="w-px h-3.5 bg-white/[0.08] shrink-0"></div>
+
+        <!-- ZONE 4: SYSTEM CONTROLS (SOUND, USER, MOBILE, EXPAND) -->
+        <div class="flex items-center gap-1 shrink-0">
+          
+          <!-- Sound Toggle (Custom SVG Speaker On / Off) -->
+          <button onclick="toggleIslandSfx()" id="island-sfx-btn" title="Sonidos de interfaz" class="island-btn w-7 h-7 rounded-full bg-white/[0.03] hover:bg-white/[0.09] border border-white/[0.06] text-white/75 hover:text-white flex items-center justify-center cursor-pointer shrink-0">
+            <svg id="sfx-icon-on" class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+            <svg id="sfx-icon-off" class="w-3.5 h-3.5 text-white/40 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
           </button>
 
-          <!-- Active Logged-In User Badge -->
-          <button onclick="logoutUser()" id="active-user-btn" title="Cambiar de usuario / Cerrar sesión" class="island-dock-btn px-2.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-red-500/25 border border-emerald-500/35 text-emerald-300 hover:text-red-300 text-xs font-bold flex items-center gap-1 cursor-pointer">
-            <span>👤</span>
+          <!-- Active User Badge (Custom SVG User Silhouette) -->
+          <button onclick="logoutUser()" id="active-user-btn" title="Cambiar de usuario" class="island-btn h-7 px-2.5 rounded-full bg-white/[0.04] hover:bg-red-500/15 border border-white/[0.08] hover:border-red-500/30 text-white/85 hover:text-red-300 text-[11px] font-medium flex items-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap">
+            <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path>
+            </svg>
             <span id="active-user-name">Equipo</span>
           </button>
 
-          <!-- Phone Simulator Button -->
-          <button onclick="openPhoneSimulator()" class="island-dock-btn px-3 py-1.5 rounded-xl bg-gradient-to-r from-sage-600 to-emerald-700 hover:from-sage-500 hover:to-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm cursor-pointer">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect>
+          <!-- Phone Simulator Button (Custom SVG Smartphone) -->
+          <button onclick="openPhoneSimulator()" class="island-btn h-7 px-2.5 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-[11px] font-medium flex items-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap">
+            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="2.5" width="12" height="19" rx="2.5"></rect>
               <line x1="12" y1="18" x2="12.01" y2="18"></line>
             </svg>
             <span class="hidden md:inline">Móvil</span>
           </button>
 
-          <!-- Expand Command Center Chevron -->
-          <button onclick="toggleIslandCommandCenter()" id="island-chevron-btn" title="Desplegar Centro de Mando 3D" class="island-dock-btn p-2 rounded-xl bg-white/10 hover:bg-white/20 text-emerald-300 cursor-pointer">
-            <svg id="island-chevron-icon" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <!-- Expand Drawer Chevron -->
+          <button onclick="toggleIslandCommandCenter()" id="island-chevron-btn" title="Ver detalles" class="island-btn w-7 h-7 rounded-full bg-white/[0.03] hover:bg-white/[0.09] border border-white/[0.06] text-white/60 hover:text-white flex items-center justify-center cursor-pointer shrink-0">
+            <svg id="island-chevron-icon" class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
             </svg>
           </button>
@@ -370,77 +355,78 @@
       </div>
 
       <!-- ========================================================= -->
-      <!-- EXPANDABLE HOLOGRAPHIC 3D COMMAND CENTER (STATE 3)        -->
+      <!-- ULTRA-MINIMALIST EXPANDABLE TELEMETRY DRAWER              -->
       <!-- ========================================================= -->
-      <div id="island-drawer" class="island-drawer relative z-10">
-        <div class="pt-4 mt-3 border-t border-white/10 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+      <div id="island-drawer" class="island-drawer">
+        <div class="pt-2.5 mt-2 border-t border-white/[0.07] grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left">
           
-          <!-- MODULE 1: INTERACTIVE BLENDER 5.2 3D SCULPTURE STAGE (4 COLS) -->
-          <div class="md:col-span-4 bg-white/[0.04] border border-white/10 rounded-2xl p-3.5 flex items-center gap-3.5 relative overflow-hidden">
-            <div class="relative w-24 h-24 rounded-2xl bg-charcoal-950/90 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-inner">
-              <canvas id="island-3d-expanded-canvas" width="160" height="160" class="w-24 h-24 block cursor-grab active:cursor-grabbing"></canvas>
-              <span class="absolute bottom-1 right-1.5 text-[9px] font-mono text-emerald-300/80 bg-black/60 px-1.5 py-0.5 rounded">GLB 3D</span>
-            </div>
-            <div class="space-y-1.5">
-              <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block">Núcleo Blender 5.2</span>
-              <h4 class="text-sm font-serif font-bold text-white leading-tight">Somatic Jade Gyroscope</h4>
-              <p class="text-[11px] text-gray-400 leading-relaxed">Mueve el ratón o pulsa para lanzar un pulso cuántico 3D.</p>
-              <button onclick="triggerIsland3DBurst('quantum')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/40 text-emerald-200 text-[11px] font-bold transition cursor-pointer flex items-center gap-1">
-                <span>✨</span>
-                <span>Pulso 3D</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- MODULE 2: 30-DAY GLOBAL TELEMETRY & TEAM SYNC (4 COLS) -->
-          <div class="md:col-span-4 bg-white/[0.04] border border-white/10 rounded-2xl p-3.5 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-300">Telemetría Global (30 Días)</span>
-              <span id="island-global-pct" class="text-xs font-mono font-bold text-emerald-300">0%</span>
-            </div>
-            <div class="flex items-baseline justify-between">
-              <div>
-                <span id="island-global-count" class="text-xl font-bold font-mono text-white">0 / 120</span>
-                <span class="text-[11px] text-gray-400 ml-1">piezas listas</span>
-              </div>
-              <span id="island-days-complete" class="text-[11px] font-bold text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                0 días 4/4
+          <!-- COL 1: PROGRESO DEL DÍA & SINCRONIZACIÓN -->
+          <div class="bg-white/[0.025] border border-white/[0.06] rounded-xl p-2.5 space-y-1.5">
+            <div class="flex items-center justify-between text-[10px] text-white/50">
+              <span class="flex items-center gap-1.5 font-medium text-white/75">
+                <svg class="w-3 h-3 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                  <path d="M2 17l10 5 10-5"></path>
+                  <path d="M2 12l10 5 10-5"></path>
+                </svg>
+                <span id="island-day-progress-text">Día 1: 0% (0/4)</span>
               </span>
-            </div>
-            <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-              <div id="island-global-bar" class="liquid-bar h-full w-0 transition-all duration-700"></div>
-            </div>
-            <div class="flex items-center justify-between text-[10px] text-gray-400 pt-0.5">
-              <span>Equipo: <strong class="text-white">Markel & Jakes</strong></span>
-              <button onclick="pullCloudState(false); showToast('☁️ Sincronizado con la nube');" class="text-emerald-300 hover:underline font-semibold cursor-pointer">
-                🔄 Sincronizar ahora
+              <button onclick="pullCloudState(false); showToast('Sincronizado con la nube');" class="text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-medium cursor-pointer transition">
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                  <path d="M3 3v5h5"></path>
+                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                  <path d="M16 16h5v5"></path>
+                </svg>
+                <span>Sync</span>
               </button>
+            </div>
+            <div class="w-full bg-white/[0.07] h-1 rounded-full overflow-hidden">
+              <div id="island-day-bar" class="bg-emerald-400 h-full w-0 transition-all duration-500"></div>
+            </div>
+            <div class="flex items-center justify-between text-[10px] text-white/40 pt-0.5">
+              <span id="island-status-text" class="truncate">Distribución Orgánica de Reels</span>
+              <span class="font-mono text-white/60">Markel & Jakes</span>
             </div>
           </div>
 
-          <!-- MODULE 3: VIRAL WINDOW RADAR & COUNTDOWN (4 COLS) -->
-          <div class="md:col-span-4 bg-white/[0.04] border border-white/10 rounded-2xl p-3.5 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-extrabold uppercase tracking-wider text-purple-300">Radar Ventana Viral EE.UU.</span>
-              <span class="text-[10px] font-mono bg-purple-500/20 text-purple-200 px-2 py-0.5 rounded-full border border-purple-400/30">EST / EDT</span>
+          <!-- COL 2: TELEMETRÍA GLOBAL 30 DÍAS -->
+          <div class="bg-white/[0.025] border border-white/[0.06] rounded-xl p-2.5 space-y-1.5">
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="flex items-center gap-1.5 font-medium text-white/75">
+                <svg class="w-3 h-3 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>Global 30 Días</span>
+              </span>
+              <span id="island-global-pct" class="font-mono font-semibold text-emerald-400">0%</span>
             </div>
-            <div class="bg-charcoal-950/80 rounded-xl p-2.5 border border-white/5 flex items-center justify-between">
-              <div>
-                <span class="text-[10px] text-gray-400 block">Próximo Pico Algorítmico:</span>
-                <span id="island-next-window" class="text-xs font-bold text-white">14:30 ES (08:30 NY)</span>
-              </div>
-              <div class="text-right">
-                <span class="text-[9px] text-gray-500 block uppercase font-bold">Cuenta Atrás</span>
-                <span id="island-countdown-viral" class="text-sm font-mono font-extrabold text-amber-300">--h --m</span>
-              </div>
+            <div class="w-full bg-white/[0.07] h-1 rounded-full overflow-hidden">
+              <div id="island-global-bar" class="bg-emerald-400 h-full w-0 transition-all duration-500"></div>
             </div>
-            <div class="grid grid-cols-2 gap-1.5 pt-0.5">
-              <a href="/01_TIENDA_Y_WEB/landing_page.html" target="_blank" class="py-1.5 px-2.5 rounded-lg bg-white/5 hover:bg-white/15 text-[11px] font-semibold text-center text-gray-200 transition">
-                🏪 Abrir Web Ventas
-              </a>
-              <a href="/02_PRODUCTO_GUIA/guide_printable.html" target="_blank" class="py-1.5 px-2.5 rounded-lg bg-white/5 hover:bg-white/15 text-[11px] font-semibold text-center text-gray-200 transition">
-                📖 Abrir Guía PDF
-              </a>
+            <div class="flex items-center justify-between text-[10px] text-white/45 pt-0.5">
+              <span><strong id="island-global-count" class="font-mono text-white/85 font-medium">0 / 120</strong> piezas</span>
+              <span id="island-days-complete" class="font-mono text-emerald-400/90">0 días 4/4</span>
+            </div>
+          </div>
+
+          <!-- COL 3: VENTANA ALGORÍTMICA EE.UU. / ES -->
+          <div class="bg-white/[0.025] border border-white/[0.06] rounded-xl p-2.5 flex flex-col justify-between space-y-1">
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="flex items-center gap-1.5 font-medium text-white/75">
+                <svg class="w-3 h-3 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <polyline points="12 7 12 12 15 15"></polyline>
+                </svg>
+                <span>Próxima Ventana</span>
+              </span>
+              <span id="island-next-window" class="font-mono text-white/80">14:00 ES / 08:00 NY</span>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-[10px] text-white/40">Cuenta atrás pico EE.UU.</span>
+              <span id="island-countdown-viral" class="text-[11px] font-mono font-medium text-amber-300">--h --m</span>
             </div>
           </div>
 
@@ -450,12 +436,14 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- STATE 4: LIVE ACTIVITY LIQUID DROPLET CAPSULE             -->
+    <!-- MINIMAL LIVE ACTIVITY PILL                                -->
     <!-- ========================================================= -->
-    <div class="flex justify-center mt-2 pointer-events-none">
-      <div id="island-live-droplet" class="island-droplet bg-charcoal-950/95 border border-emerald-400/40 text-white px-4 py-1.5 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-semibold backdrop-blur-xl">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span id="island-droplet-text" class="text-emerald-100">Actividad en vivo</span>
+    <div class="flex justify-center mt-1.5 pointer-events-none">
+      <div id="island-live-droplet" class="island-droplet bg-[#0D100E]/95 border border-white/10 text-white px-3 py-1 rounded-full shadow-lg flex items-center gap-2 text-[11px] font-medium backdrop-blur-xl">
+        <svg class="w-3 h-3 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span id="island-droplet-text" class="text-white/90">Sincronizado</span>
       </div>
     </div>
   </aside>
@@ -3904,19 +3892,19 @@
     let currentDay = 1; // Default to Day 1
     let currentWeek = 1;
 
-    // 1. DYNAMIC ISLAND REAL-TIME CLOCKS & VIRAL COUNTDOWN
+    // 1. ULTRA-MINIMALIST ISLAND REAL-TIME CLOCKS & VIRAL COUNTDOWN
     function updateIslandClocks() {
       const now = new Date();
 
-      const esStr = now.toLocaleTimeString('es-ES', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit' });
-      const nyStr = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit' });
+      const esStr = now.toLocaleTimeString('es-ES', { timeZone: 'Europe/Madrid', hour12: false, hour: '2-digit', minute: '2-digit' });
+      const nyStr = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false, hour: '2-digit', minute: '2-digit' });
 
       const elClockEs = document.getElementById('clock-es');
       const elClockNy = document.getElementById('clock-ny');
       if (elClockEs) elClockEs.innerText = esStr;
       if (elClockNy) elClockNy.innerText = nyStr;
 
-      // Spain & NY hours for sun/moon indicators & viral window algorithm
+      // Spain & NY hours for custom SVG day/night icons & viral window algorithm
       const spainTimeParts = now.toLocaleTimeString('es-ES', { timeZone: 'Europe/Madrid', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }).split(':');
       const spainHour = parseInt(spainTimeParts[0], 10) || 0;
       const spainMin = parseInt(spainTimeParts[1], 10) || 0;
@@ -3924,10 +3912,13 @@
 
       const nyHour = parseInt(now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false, hour: '2-digit' }), 10) || 0;
 
-      const sunEs = document.getElementById('island-sun-es');
-      const sunNy = document.getElementById('island-sun-ny');
-      if (sunEs) sunEs.innerText = (spainHour >= 7 && spainHour < 20) ? '☀️' : '🌙';
-      if (sunNy) sunNy.innerText = (nyHour >= 7 && nyHour < 20) ? '☀️' : '🌙';
+      const esDay = spainHour >= 7 && spainHour < 20;
+      const nyDay = nyHour >= 7 && nyHour < 20;
+
+      document.getElementById('icon-es-day')?.classList.toggle('hidden', !esDay);
+      document.getElementById('icon-es-night')?.classList.toggle('hidden', esDay);
+      document.getElementById('icon-ny-day')?.classList.toggle('hidden', !nyDay);
+      document.getElementById('icon-ny-night')?.classList.toggle('hidden', nyDay);
 
       const dot = document.getElementById('island-status-dot');
       const text = document.getElementById('island-status-text');
@@ -3938,15 +3929,15 @@
       const isWindow2 = (spainHour >= 21 && spainHour <= 23);
 
       if (isWindow1 || isWindow2) {
-        if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-ping";
-        if (text) text.innerText = "🔥 Ventana Viral Activa Ahora";
-        if (nextWinEl) nextWinEl.innerText = isWindow1 ? "Pico #1 Activo (14:00 - 16:00 ES)" : "Pico #2 Activo (21:00 - 23:59 ES)";
-        if (cdViralEl) cdViralEl.innerText = "PUBLICAR AHORA • PICO MÁXIMO US/EU";
+        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0";
+        if (text) text.innerText = "Ventana Viral Activa Ahora";
+        if (nextWinEl) nextWinEl.innerText = isWindow1 ? "14:00 - 16:00 ES" : "21:00 - 23:59 ES";
+        if (cdViralEl) cdViralEl.innerText = "Pico Activo US/EU";
       } else if (spainHour >= 10 && spainHour < 14) {
-        if (dot) dot.className = "w-2 h-2 rounded-full bg-amber-400";
+        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0";
         if (text) text.innerText = "Fase de Creación & Preparación";
       } else {
-        if (dot) dot.className = "w-2 h-2 rounded-full bg-sage-400";
+        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0";
         if (text) text.innerText = "Distribución Orgánica de Reels";
       }
 
@@ -3954,16 +3945,16 @@
       if (!isWindow1 && !isWindow2) {
         const nowTotalSec = spainHour * 3600 + spainMin * 60 + spainSec;
         let targetSec = 14 * 3600;
-        let labelWin = "14:00 ES / 08:00 NY";
+        let labelWin = "14:00 ES · 08:00 NY";
         if (spainHour >= 16 && spainHour < 21) {
           targetSec = 21 * 3600;
-          labelWin = "21:00 ES / 15:00 NY";
-        } else if (spainHour >= 24 || spainHour >= 21) {
+          labelWin = "21:00 ES · 15:00 NY";
+        } else if (spainHour >= 21) {
           targetSec = (24 + 14) * 3600;
           labelWin = "Mañana 14:00 ES";
         } else if (spainHour < 14) {
           targetSec = 14 * 3600;
-          labelWin = "14:00 ES / 08:00 NY";
+          labelWin = "14:00 ES · 08:00 NY";
         }
         let diff = targetSec - nowTotalSec;
         if (diff < 0) diff += 24 * 3600;
@@ -3971,11 +3962,11 @@
         const mm = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
         const ss = String(diff % 60).padStart(2, '0');
         if (nextWinEl) nextWinEl.innerText = labelWin;
-        if (cdViralEl) cdViralEl.innerText = `Faltan ${hh}h ${mm}m ${ss}s para pico viral`;
+        if (cdViralEl) cdViralEl.innerText = `${hh}h ${mm}m ${ss}s`;
       }
     }
 
-    // 1B. WEB AUDIO API HARMONIC MICRO-SYNTHESIZER
+    // 1B. WEB AUDIO API MICRO-SYNTHESIZER
     let islandSfxEnabled = localStorage.getItem('elena_island_sfx') !== 'false';
     let audioCtx = null;
 
@@ -3983,13 +3974,8 @@
       const iconOn = document.getElementById('sfx-icon-on');
       const iconOff = document.getElementById('sfx-icon-off');
       if (iconOn && iconOff) {
-        if (islandSfxEnabled) {
-          iconOn.classList.remove('hidden');
-          iconOff.classList.add('hidden');
-        } else {
-          iconOn.classList.add('hidden');
-          iconOff.classList.remove('hidden');
-        }
+        iconOn.classList.toggle('hidden', !islandSfxEnabled);
+        iconOff.classList.toggle('hidden', islandSfxEnabled);
       }
     }
 
@@ -3999,9 +3985,9 @@
       updateSfxButtonUI();
       if (islandSfxEnabled) {
         playIslandSfx('check');
-        showToast("🔊 Audio Háctico 3D Activado");
+        showToast("Sonido de interfaz activado");
       } else {
-        showToast("🔇 Audio Háctico Silenciado");
+        showToast("Sonido de interfaz silenciado");
       }
     }
 
@@ -4029,28 +4015,23 @@
         };
 
         if (type === 'check') {
-          // Crystalline ascending jade chord (C6 -> E6 -> G6 -> B6)
-          playTone(1046.50, 0.00, 0.22, 0.035, 'sine');
-          playTone(1318.51, 0.05, 0.25, 0.035, 'triangle');
-          playTone(1567.98, 0.10, 0.32, 0.040, 'sine');
-          playTone(1975.53, 0.16, 0.42, 0.030, 'sine');
+          playTone(1046.50, 0.00, 0.18, 0.028, 'sine');
+          playTone(1318.51, 0.04, 0.22, 0.028, 'sine');
+          playTone(1567.98, 0.08, 0.28, 0.030, 'sine');
         } else if (type === 'expand') {
-          // Warm holographic swell
-          playTone(440.0, 0.00, 0.25, 0.025, 'sine');
-          playTone(659.25, 0.04, 0.28, 0.025, 'triangle');
-          playTone(880.0, 0.08, 0.35, 0.030, 'sine');
+          playTone(523.25, 0.00, 0.16, 0.020, 'sine');
+          playTone(659.25, 0.04, 0.20, 0.020, 'sine');
         } else if (type === 'collapse') {
-          playTone(880.0, 0.00, 0.18, 0.020, 'sine');
-          playTone(587.33, 0.04, 0.22, 0.020, 'sine');
+          playTone(659.25, 0.00, 0.14, 0.018, 'sine');
+          playTone(523.25, 0.04, 0.18, 0.018, 'sine');
         } else if (type === 'sync') {
-          // Liquid droplet harmonic ping
-          playTone(1174.66, 0.00, 0.18, 0.028, 'sine');
-          playTone(1760.00, 0.06, 0.30, 0.032, 'sine');
+          playTone(1174.66, 0.00, 0.15, 0.022, 'sine');
+          playTone(1567.98, 0.05, 0.22, 0.024, 'sine');
         }
       } catch (e) {}
     }
 
-    // 1C. LIVE ACTIVITY LIQUID DROPLET & COMMAND CENTER DRAWER
+    // 1C. MINIMAL LIVE ACTIVITY PILL & TELEMETRY DRAWER
     let dropletTimeout = null;
     function triggerIslandDroplet(msg) {
       const droplet = document.getElementById('island-live-droplet');
@@ -4062,14 +4043,14 @@
       if (dropletTimeout) clearTimeout(dropletTimeout);
       dropletTimeout = setTimeout(() => {
         droplet.classList.remove('active');
-      }, 3400);
+      }, 2800);
     }
 
     let islandExpanded = false;
     function toggleIslandCommandCenter() {
       const shell = document.getElementById('island-shell');
       const drawer = document.getElementById('island-drawer');
-      const chevron = document.getElementById('island-chevron');
+      const chevron = document.getElementById('island-chevron-icon');
       if (!shell || !drawer) return;
 
       islandExpanded = !islandExpanded;
@@ -4079,361 +4060,12 @@
         if (chevron) chevron.style.transform = 'rotate(180deg)';
         updateGlobalIslandTelemetry();
         playIslandSfx('expand');
-        triggerIsland3DBurst('expand');
       } else {
         shell.classList.remove('island-expanded');
         drawer.classList.remove('open');
         if (chevron) chevron.style.transform = 'rotate(0deg)';
         playIslandSfx('collapse');
       }
-    }
-
-    function initIslandSpotlightAndTilt() {
-      const shell = document.getElementById('island-shell');
-      if (!shell) return;
-
-      shell.addEventListener('mousemove', (e) => {
-        const rect = shell.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        shell.style.setProperty('--mx', `${x}px`);
-        shell.style.setProperty('--my', `${y}px`);
-
-        const normX = (x / rect.width) - 0.5;
-        const normY = (y / rect.height) - 0.5;
-        const maxTilt = islandExpanded ? 2.2 : 5.5;
-        shell.style.setProperty('--ry', `${(normX * maxTilt).toFixed(2)}deg`);
-        shell.style.setProperty('--rx', `${(-normY * maxTilt).toFixed(2)}deg`);
-      });
-
-      shell.addEventListener('mouseleave', () => {
-        shell.style.setProperty('--rx', '0deg');
-        shell.style.setProperty('--ry', '0deg');
-      });
-    }
-
-    // 1D. THREE.JS + BLENDER 5.2 GLB HOLOGRAPHIC 3D ENGINE
-    let island3DState = {
-      burstEnergy: 0,
-      colorMode: 'normal', // 'normal' | 'emerald' | 'gold'
-      mouseX: 0,
-      mouseY: 0,
-      dragRotX: 0,
-      dragRotY: 0,
-      isDragging: false,
-      lastDragX: 0,
-      lastDragY: 0,
-      viewports: []
-    };
-
-    function triggerIsland3DBurst(mode = 'complete') {
-      island3DState.burstEnergy = mode === 'complete' ? 3.8 : 2.2;
-      island3DState.colorMode = mode === 'complete' ? 'emerald' : (mode === 'sync' ? 'gold' : 'normal');
-      setTimeout(() => {
-        island3DState.colorMode = 'normal';
-      }, 1800);
-    }
-
-    function createProceduralSculpture() {
-      const group = new THREE.Group();
-
-      // 1. Jade Core (Organic Faceted Icosahedron)
-      const coreGeo = new THREE.IcosahedronGeometry(0.78, 3);
-      const pos = coreGeo.attributes.position;
-      for (let i = 0; i < pos.count; i++) {
-        const vx = pos.getX(i), vy = pos.getY(i), vz = pos.getZ(i);
-        const wave = 0.05 * Math.sin(vx * 5.0) * Math.cos(vy * 5.0) * Math.sin(vz * 5.0);
-        const len = Math.sqrt(vx * vx + vy * vy + vz * vz) || 1;
-        pos.setXYZ(i, vx + (vx / len) * wave, vy + (vy / len) * wave, vz + (vz / len) * wave);
-      }
-      coreGeo.computeVertexNormals();
-
-      const coreMat = new THREE.MeshPhysicalMaterial({
-        color: 0x3b6e52,
-        emissive: 0x103524,
-        emissiveIntensity: 0.45,
-        roughness: 0.15,
-        metalness: 0.15,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.08,
-        wireframe: false
-      });
-      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-      coreMesh.name = 'JadeCore';
-      group.add(coreMesh);
-
-      // 2. Outer Champagne Gold Gyroscopic Ring
-      const ringOuterGeo = new THREE.TorusGeometry(1.22, 0.045, 24, 96);
-      const ringOuterMat = new THREE.MeshStandardMaterial({
-        color: 0xe6c687,
-        emissive: 0x423012,
-        emissiveIntensity: 0.35,
-        metalness: 0.92,
-        roughness: 0.14
-      });
-      const ringOuter = new THREE.Mesh(ringOuterGeo, ringOuterMat);
-      ringOuter.rotation.set(0.65, 0.2, 0.1);
-      ringOuter.name = 'RingOuter';
-      group.add(ringOuter);
-
-      // 3. Inner Platinum Sage Ring
-      const ringInnerGeo = new THREE.TorusGeometry(1.00, 0.032, 20, 80);
-      const ringInnerMat = new THREE.MeshStandardMaterial({
-        color: 0xa7d7be,
-        emissive: 0x1e4631,
-        emissiveIntensity: 0.3,
-        metalness: 0.85,
-        roughness: 0.20
-      });
-      const ringInner = new THREE.Mesh(ringInnerGeo, ringInnerMat);
-      ringInner.rotation.set(-0.55, 0.8, -0.3);
-      ringInner.name = 'RingInner';
-      group.add(ringInner);
-
-      // 4. Orbital Pearl Satellites
-      const satGeo = new THREE.SphereGeometry(0.11, 20, 20);
-      const satMat = new THREE.MeshStandardMaterial({
-        color: 0xfff8eb,
-        emissive: 0x6ee7b7,
-        emissiveIntensity: 0.8,
-        roughness: 0.1,
-        metalness: 0.3
-      });
-      for (let i = 0; i < 3; i++) {
-        const angle = (i * Math.PI * 2) / 3;
-        const sat = new THREE.Mesh(satGeo, satMat);
-        sat.position.set(Math.cos(angle) * 1.42, Math.sin(angle * 2) * 0.28, Math.sin(angle) * 1.42);
-        sat.name = `SatelliteNode_${i + 1}`;
-        group.add(sat);
-      }
-
-      return group;
-    }
-
-    function setupIslandViewport(canvasId, cameraZ = 3.5, interactiveOrbit = false) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas || typeof THREE === 'undefined') return null;
-
-      const scene = new THREE.Scene();
-      const width = canvas.clientWidth || 72;
-      const height = canvas.clientHeight || 72;
-      const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-      camera.position.set(0, 0, cameraZ);
-
-      const renderer = new THREE.WebGLRenderer({
-        canvas: canvas,
-        alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance'
-      });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      renderer.setSize(width, height, false);
-      if (renderer.outputEncoding !== undefined) {
-        renderer.outputEncoding = THREE.sRGBEncoding;
-      }
-
-      // Studio Lighting (Emerald Key + Champagne Gold Rim + Cool Fill)
-      const ambient = new THREE.AmbientLight(0xd8f3dc, 0.85);
-      scene.add(ambient);
-
-      const keyLight = new THREE.PointLight(0x34d399, 2.8, 12);
-      keyLight.position.set(2.6, 2.4, 3.2);
-      scene.add(keyLight);
-
-      const rimLight = new THREE.PointLight(0xfbbf24, 2.4, 12);
-      rimLight.position.set(-2.8, -1.8, 2.2);
-      scene.add(rimLight);
-
-      const topLight = new THREE.DirectionalLight(0xffffff, 1.3);
-      topLight.position.set(0, 4, 2);
-      scene.add(topLight);
-
-      // Immediate procedural sculpture at frame 0, then hot-swapped with Blender 5.2 GLB
-      const rootGroup = new THREE.Group();
-      const fallbackModel = createProceduralSculpture();
-      rootGroup.add(fallbackModel);
-      scene.add(rootGroup);
-
-      if (interactiveOrbit) {
-        canvas.addEventListener('mousedown', (e) => {
-          island3DState.isDragging = true;
-          island3DState.lastDragX = e.clientX;
-          island3DState.lastDragY = e.clientY;
-        });
-        window.addEventListener('mouseup', () => {
-          island3DState.isDragging = false;
-        });
-        window.addEventListener('mousemove', (e) => {
-          if (!island3DState.isDragging) return;
-          const dx = e.clientX - island3DState.lastDragX;
-          const dy = e.clientY - island3DState.lastDragY;
-          island3DState.lastDragX = e.clientX;
-          island3DState.lastDragY = e.clientY;
-          island3DState.dragRotY += dx * 0.012;
-          island3DState.dragRotX += dy * 0.012;
-        });
-      }
-
-      return { canvas, scene, camera, renderer, rootGroup, keyLight, rimLight };
-    }
-
-    function initIsland3DEngine() {
-      if (typeof THREE === 'undefined') return;
-
-      const vpCompact = setupIslandViewport('island-3d-canvas', 3.45, false);
-      const vpExpanded = setupIslandViewport('island-3d-expanded-canvas', 3.35, true);
-      if (vpCompact) island3DState.viewports.push(vpCompact);
-      if (vpExpanded) island3DState.viewports.push(vpExpanded);
-
-      // Load authentic Blender 5.2 GLB asset (/assets/3d/elena_orb.glb)
-      if (typeof THREE.GLTFLoader !== 'undefined') {
-        const loader = new THREE.GLTFLoader();
-        loader.load(
-          '/assets/3d/elena_orb.glb',
-          (gltf) => {
-            island3DState.viewports.forEach((vp) => {
-              // Clear procedural fallback and mount real Blender 5.2 mesh hierarchy
-              while (vp.rootGroup.children.length > 0) {
-                vp.rootGroup.remove(vp.rootGroup.children[0]);
-              }
-              const clonedScene = gltf.scene.clone(true);
-              clonedScene.traverse((child) => {
-                if (child.isMesh) {
-                  if (child.name.includes('JadeCore')) {
-                    child.material = new THREE.MeshPhysicalMaterial({
-                      color: 0x3b6e52,
-                      emissive: 0x103524,
-                      emissiveIntensity: 0.42,
-                      roughness: 0.14,
-                      metalness: 0.18,
-                      clearcoat: 1.0,
-                      clearcoatRoughness: 0.06
-                    });
-                  } else if (child.name.includes('RingOuter')) {
-                    child.material = new THREE.MeshStandardMaterial({
-                      color: 0xe6c687,
-                      emissive: 0x4a3514,
-                      emissiveIntensity: 0.38,
-                      metalness: 0.94,
-                      roughness: 0.12
-                    });
-                  } else if (child.name.includes('RingInner')) {
-                    child.material = new THREE.MeshStandardMaterial({
-                      color: 0xa7d7be,
-                      emissive: 0x1e4631,
-                      emissiveIntensity: 0.32,
-                      metalness: 0.88,
-                      roughness: 0.18
-                    });
-                  } else if (child.name.includes('Satellite')) {
-                    child.material = new THREE.MeshStandardMaterial({
-                      color: 0xfff8eb,
-                      emissive: 0x34d399,
-                      emissiveIntensity: 0.85,
-                      roughness: 0.1,
-                      metalness: 0.3
-                    });
-                  }
-                }
-              });
-              vp.rootGroup.add(clonedScene);
-            });
-          },
-          undefined,
-          () => {
-            // Procedural fallback is already active and running smoothly
-          }
-        );
-      }
-
-      // Track pointer globally for subtle magnetic 3D gaze
-      window.addEventListener('mousemove', (e) => {
-        island3DState.mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-        island3DState.mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-      });
-
-      // Handle responsive canvas resize
-      window.addEventListener('resize', () => {
-        island3DState.viewports.forEach((vp) => {
-          const w = vp.canvas.clientWidth || 72;
-          const h = vp.canvas.clientHeight || 72;
-          vp.camera.aspect = w / h;
-          vp.camera.updateProjectionMatrix();
-          vp.renderer.setSize(w, h, false);
-        });
-      });
-
-      // 60fps Animation Loop
-      const clock = new THREE.Clock();
-      function animate3D() {
-        requestAnimationFrame(animate3D);
-        const dt = Math.min(clock.getDelta(), 0.05);
-        const elapsed = clock.getElapsedTime();
-
-        // Decay burst energy smoothly
-        if (island3DState.burstEnergy > 0.01) {
-          island3DState.burstEnergy *= Math.pow(0.18, dt);
-        } else {
-          island3DState.burstEnergy = 0;
-        }
-
-        const speedMult = 1 + island3DState.burstEnergy * 4.2;
-
-        island3DState.viewports.forEach((vp, idx) => {
-          // Resize check if expanded drawer just opened
-          const cw = vp.canvas.clientWidth;
-          const ch = vp.canvas.clientHeight;
-          if (cw > 0 && ch > 0 && (vp.canvas.width !== cw * vp.renderer.getPixelRatio() || vp.canvas.height !== ch * vp.renderer.getPixelRatio())) {
-            vp.camera.aspect = cw / ch;
-            vp.camera.updateProjectionMatrix();
-            vp.renderer.setSize(cw, ch, false);
-          }
-
-          const group = vp.rootGroup;
-          // Breathing levitation + burst scale
-          const breathe = 1 + Math.sin(elapsed * 2.4) * 0.045 + island3DState.burstEnergy * 0.08;
-          group.scale.setScalar(breathe);
-
-          // Smooth magnetic look-at + user orbit drag
-          const targetRotY = elapsed * 0.55 + island3DState.mouseX * 0.55 + (idx === 1 ? island3DState.dragRotY : 0);
-          const targetRotX = Math.sin(elapsed * 1.2) * 0.22 - island3DState.mouseY * 0.38 + (idx === 1 ? island3DState.dragRotX : 0);
-
-          group.rotation.y += (targetRotY - group.rotation.y) * 0.08 + dt * 0.4 * island3DState.burstEnergy;
-          group.rotation.x += (targetRotX - group.rotation.x) * 0.08;
-
-          // Animate individual sub-meshes (JadeCore, RingOuter, RingInner, Satellites)
-          group.traverse((child) => {
-            if (child.isMesh) {
-              if (child.name.includes('RingOuter')) {
-                child.rotation.z += dt * 1.15 * speedMult;
-                child.rotation.x += dt * 0.45 * speedMult;
-              } else if (child.name.includes('RingInner')) {
-                child.rotation.y -= dt * 1.45 * speedMult;
-                child.rotation.z -= dt * 0.65 * speedMult;
-              } else if (child.name.includes('JadeCore')) {
-                child.rotation.y -= dt * 0.35 * speedMult;
-                if (child.material && child.material.emissive) {
-                  if (island3DState.colorMode === 'emerald') {
-                    child.material.emissive.setHex(0x10b981);
-                    child.material.emissiveIntensity = 0.85 + island3DState.burstEnergy * 0.3;
-                  } else if (island3DState.colorMode === 'gold') {
-                    child.material.emissive.setHex(0xd97706);
-                    child.material.emissiveIntensity = 0.75;
-                  } else {
-                    child.material.emissive.setHex(0x103524);
-                    child.material.emissiveIntensity = 0.42 + Math.sin(elapsed * 3) * 0.1;
-                  }
-                }
-              } else if (child.name.includes('Satellite')) {
-                child.position.y = Math.sin(elapsed * 3.2 + child.id) * 0.26;
-              }
-            }
-          });
-
-          vp.renderer.render(vp.scene, vp.camera);
-        });
-      }
-      animate3D();
     }
 
     // 2. WEEK SELECTOR & DAY TABS RENDERING
@@ -4688,8 +4320,7 @@
           eq.classList.remove('hidden');
           eq.classList.add('flex');
         }
-        triggerIsland3DBurst('voice');
-        triggerIslandDroplet('🎙️ Elena AI Voice Synthesizer Activo');
+        triggerIslandDroplet('Síntesis de voz activa');
       };
       utterance.onend = () => {
         if (eq) {
@@ -4863,7 +4494,6 @@
           updateDailyProgress();
           renderDayTabs();
           if (changed && !isInitial) {
-            triggerIsland3DBurst('sync');
             playIslandSfx('sync');
           }
         }
@@ -4911,9 +4541,8 @@
         if (errEl) errEl.classList.add('hidden');
         applyAuthUI();
         playIslandSfx('check');
-        triggerIsland3DBurst('complete');
-        triggerIslandDroplet(`✨ Sesión iniciada: ${currentUser}`);
-        showToast(`👋 Bienvenido, ${currentUser}`);
+        triggerIslandDroplet(`Sesión activa: ${currentUser}`);
+        showToast(`Bienvenido, ${currentUser}`);
       } else {
         if (errEl) errEl.classList.remove('hidden');
       }
@@ -4955,14 +4584,13 @@
               restoreCheckboxes(currentDay);
               updateDailyProgress();
               renderDayTabs();
-              triggerIsland3DBurst('sync');
               playIslandSfx('sync');
               if (payload.label) {
-                triggerIslandDroplet(`⚡ ${payload.label}`);
-                showToast(`🔄 ${payload.label}`);
+                triggerIslandDroplet(payload.label);
+                showToast(payload.label);
               } else {
-                triggerIslandDroplet('⚡ Progreso actualizado en vivo');
-                showToast('🔄 Progreso actualizado por tu compañero');
+                triggerIslandDroplet('Progreso actualizado en vivo');
+                showToast('Progreso actualizado por tu compañero');
               }
             }
           } catch (e) {}
@@ -4977,21 +4605,19 @@
       if (chk.checked) {
         localStorage.setItem(`elena_d${currentDay}_${id}`, 'true');
         playIslandSfx('check');
-        triggerIsland3DBurst('complete');
       } else {
         localStorage.removeItem(`elena_d${currentDay}_${id}`);
         playIslandSfx('collapse');
-        triggerIsland3DBurst('sync');
       }
       styleCheckboxLabel(chk);
       updateDailyProgress();
       renderDayTabs();
       const itemLabel = CHECK_LABELS[id] || 'Tarea';
-      const stateText = chk.checked ? 'Listo ✅' : 'Desmarcado';
+      const stateText = chk.checked ? 'Listo' : 'Desmarcado';
       const who = currentUser || 'Compañero';
-      const msg = `${who}: Día ${currentDay} • ${itemLabel} ${stateText}`;
-      triggerIslandDroplet(`✨ ${msg}`);
-      showToast(`Día ${currentDay} • ${itemLabel}: ${stateText}`);
+      const msg = `${who}: Día ${currentDay} · ${itemLabel} (${stateText})`;
+      triggerIslandDroplet(msg);
+      showToast(`Día ${currentDay} · ${itemLabel}: ${stateText}`);
       pushCloudState(msg);
     }
 
@@ -5007,14 +4633,21 @@
 
     function updateGlobalIslandTelemetry() {
       let totalDone = 0;
+      let daysComplete = 0;
       for (let d = 1; d <= 30; d++) {
-        totalDone += getDayDoneCount(d);
+        const c = getDayDoneCount(d);
+        totalDone += c;
+        if (c === 4) daysComplete++;
       }
       const globalPct = Math.round((totalDone / 120) * 100);
       const elGlobalCount = document.getElementById('island-global-count');
       const elGlobalBar = document.getElementById('island-global-bar');
+      const elGlobalPct = document.getElementById('island-global-pct');
+      const elDaysComplete = document.getElementById('island-days-complete');
       if (elGlobalCount) elGlobalCount.innerText = `${totalDone} / 120`;
       if (elGlobalBar) elGlobalBar.style.width = `${globalPct}%`;
+      if (elGlobalPct) elGlobalPct.innerText = `${globalPct}%`;
+      if (elDaysComplete) elDaysComplete.innerText = `${daysComplete} días 4/4`;
     }
 
     function updateDailyProgress() {
@@ -5028,14 +4661,14 @@
       document.getElementById('progress-text').innerText = `${done} / 4`;
       document.getElementById('progress-bar').style.width = `${pct}%`;
 
-      // Update 3D Dynamic Island SVG Ring & Drawer Day Progress
+      // Update Minimalist Dynamic Island SVG Ring (r=7 => C=43.98) & Drawer Day Progress
       const ringCircle = document.getElementById('island-ring-circle');
       const ringLabel = document.getElementById('island-ring-label');
       const dayProgressText = document.getElementById('island-day-progress-text');
       const dayBar = document.getElementById('island-day-bar');
 
       if (ringCircle) {
-        const circumference = 94.25; // 2 * PI * 15
+        const circumference = 43.98; // 2 * PI * 7
         const offset = circumference - (done / 4) * circumference;
         ringCircle.style.strokeDashoffset = `${offset}`;
       }
@@ -5071,7 +4704,7 @@
       const fullText = `${reel.caption}\n\n.\n.\n.\n${reel.hashtags}`;
       navigator.clipboard.writeText(fullText).then(() => {
         playIslandSfx('sync');
-        triggerIslandDroplet(`📋 Caption Reel #${reelNum} copiado`);
+        triggerIslandDroplet(`Caption Reel #${reelNum} copiado`);
         showToast("Caption y hashtags copiados para Instagram");
       });
     }
@@ -5125,8 +4758,6 @@
     window.addEventListener('DOMContentLoaded', async () => {
       applyAuthUI();
       updateSfxButtonUI();
-      initIslandSpotlightAndTilt();
-      initIsland3DEngine();
       updateIslandClocks();
       setInterval(updateIslandClocks, 1000);
       switchWeek(1);
