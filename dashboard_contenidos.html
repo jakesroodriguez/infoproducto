@@ -222,7 +222,10 @@
         <!-- Quick Metrics / Checklist Status Widget -->
         <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shrink-0 w-full md:w-auto flex md:flex-col items-center md:items-end justify-between gap-3 text-right">
           <div>
-            <span class="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">Progreso Diario</span>
+            <div class="flex items-center justify-end gap-1.5 mb-0.5">
+              <span id="sync-status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="sync-status-label" class="text-[10px] uppercase font-bold text-emerald-300/90 block tracking-wider">Sync Equipo Activo</span>
+            </div>
             <div class="flex items-baseline gap-2 mt-0.5 justify-end">
               <span id="progress-text" class="text-xl font-bold font-mono text-white">0 / 4</span>
               <span class="text-xs text-gray-400">piezas</span>
@@ -3648,6 +3651,7 @@
       for (let d = startDay; d <= endDay; d++) {
         const btn = document.createElement('button');
         const isCurrent = d === currentDay;
+        const doneCount = getDayDoneCount(d);
 
         btn.className = `flex-1 min-w-[105px] py-2 px-3 rounded-2xl text-left transition flex flex-col justify-center shrink-0 ${
           isCurrent 
@@ -3659,9 +3663,19 @@
         if (d === 1) label = 'Día 1';
         if (d === 2) label = 'Día 2 (Hoy)';
 
+        let badgeHtml = '';
+        if (doneCount === 4) {
+          badgeHtml = `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isCurrent ? 'bg-emerald-400/20 text-emerald-200' : 'bg-emerald-100 text-emerald-700'}">✓ 4/4</span>`;
+        } else if (doneCount > 0) {
+          badgeHtml = `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full ${isCurrent ? 'bg-white/20 text-white' : 'bg-sage-100 text-sage-700'}">${doneCount}/4</span>`;
+        }
+
         btn.innerHTML = `
-          <span class="text-xs font-bold leading-tight block">${label}</span>
-          <span class="text-[10px] ${isCurrent ? 'text-sage-200' : 'text-gray-400'} font-medium block truncate">${calendarData[d].focus}</span>
+          <div class="flex items-center justify-between gap-1">
+            <span class="text-xs font-bold leading-tight block">${label}</span>
+            ${badgeHtml}
+          </div>
+          <span class="text-[10px] ${isCurrent ? 'text-sage-200' : 'text-gray-400'} font-medium block truncate mt-0.5">${calendarData[d].focus}</span>
         `;
         btn.onclick = () => selectDay(d);
         container.appendChild(btn);
@@ -3858,15 +3872,160 @@
       showToast("Reproduciendo locución en inglés...");
     }
 
-    // 6. PROGRESS & CHECKLIST (LOCALSTORAGE MEMORY)
+    // 6. PROGRESS & CHECKLIST (REAL-TIME TEAM CLOUD SYNC + LOCALSTORAGE)
+    const CHECK_IDS = ['check-r1-done', 'check-r2-done', 'check-s1-done', 'check-s2-done'];
+    const CHECK_LABELS = {
+      'check-r1-done': 'Reel #1',
+      'check-r2-done': 'Reel #2',
+      'check-s1-done': 'Story #1',
+      'check-s2-done': 'Story #2'
+    };
+    const KV_GET_URL = 'https://keyvalue.immanuel.co/api/KeyVal/GetValue/r0g6lh3c/elena_30d_hex';
+    const KV_SET_BASE = 'https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/r0g6lh3c/elena_30d_hex/';
+    const NTFY_TOPIC = 'elena_vance_studio_sync_98234792';
+    const CLIENT_ID = 'c_' + Math.random().toString(36).substring(2, 9);
+
+    function getDayDoneCount(d) {
+      let done = 0;
+      CHECK_IDS.forEach(id => {
+        if (localStorage.getItem(`elena_d${d}_${id}`) === 'true') done++;
+      });
+      return done;
+    }
+
+    function getLocalHexState() {
+      let hex = '';
+      for (let d = 1; d <= 30; d++) {
+        let mask = 0;
+        CHECK_IDS.forEach((id, idx) => {
+          if (localStorage.getItem(`elena_d${d}_${id}`) === 'true') {
+            mask |= (1 << idx);
+          }
+        });
+        hex += mask.toString(16);
+      }
+      return hex;
+    }
+
+    function applyHexStateToLocal(hex) {
+      if (!hex || typeof hex !== 'string' || hex.length < 30) return false;
+      let changed = false;
+      for (let d = 1; d <= 30; d++) {
+        const mask = parseInt(hex[d - 1], 16) || 0;
+        CHECK_IDS.forEach((id, idx) => {
+          const isTrue = Boolean(mask & (1 << idx));
+          const key = `elena_d${d}_${id}`;
+          const prev = localStorage.getItem(key) === 'true';
+          if (prev !== isTrue) {
+            changed = true;
+            if (isTrue) {
+              localStorage.setItem(key, 'true');
+            } else {
+              localStorage.removeItem(key);
+            }
+          }
+        });
+      }
+      return changed;
+    }
+
+    async function pushCloudState(actionLabel) {
+      const hex = getLocalHexState();
+      const statusLabel = document.getElementById('sync-status-label');
+      const statusDot = document.getElementById('sync-status-dot');
+      if (statusLabel) statusLabel.innerText = 'Sincronizando...';
+      if (statusDot) statusDot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping';
+
+      try {
+        await fetch(KV_SET_BASE + hex, { method: 'POST' });
+        await fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
+          method: 'POST',
+          body: JSON.stringify({
+            clientId: CLIENT_ID,
+            hex: hex,
+            day: currentDay,
+            label: actionLabel,
+            ts: Date.now()
+          })
+        });
+        if (statusLabel) statusLabel.innerText = 'Sync Equipo Activo';
+        if (statusDot) statusDot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+      } catch (err) {
+        console.warn('Error syncing cloud state:', err);
+        if (statusLabel) statusLabel.innerText = 'Guardado Local';
+      }
+    }
+
+    async function pullCloudState(isInitial = false) {
+      try {
+        const res = await fetch(KV_GET_URL + '?t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) return;
+        let hex = await res.text();
+        hex = hex.replace(/"/g, '').trim();
+        if (hex && hex.length === 30) {
+          const localHex = getLocalHexState();
+          // If cloud is still blank on first load but user already checked items locally, seed cloud
+          if (isInitial && hex === '000000000000000000000000000000' && localHex !== '000000000000000000000000000000') {
+            pushCloudState('Sincronización inicial');
+            return;
+          }
+          const changed = applyHexStateToLocal(hex);
+          if (changed) {
+            restoreCheckboxes(currentDay);
+            updateDailyProgress();
+            renderDayTabs();
+          }
+        }
+      } catch (err) {
+        console.warn('Could not pull cloud state:', err);
+      }
+    }
+
+    function subscribeRealtimeSync() {
+      if (!('EventSource' in window)) return;
+      try {
+        const es = new EventSource(`https://ntfy.sh/${NTFY_TOPIC}/sse`);
+        es.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (!data.message) return;
+            const payload = JSON.parse(data.message);
+            if (payload.clientId === CLIENT_ID) return;
+            if (payload.hex && payload.hex.length === 30) {
+              applyHexStateToLocal(payload.hex);
+              restoreCheckboxes(currentDay);
+              updateDailyProgress();
+              renderDayTabs();
+              if (payload.label) {
+                showToast(`🔄 Compañero: ${payload.label}`);
+              } else {
+                showToast('🔄 Progreso actualizado por tu compañero');
+              }
+            }
+          } catch (e) {}
+        };
+      } catch (e) {
+        console.warn('SSE init failed:', e);
+      }
+    }
+
     function toggleCheck(id) {
       const chk = document.getElementById(id);
-      localStorage.setItem(`elena_d${currentDay}_${id}`, chk.checked);
+      if (chk.checked) {
+        localStorage.setItem(`elena_d${currentDay}_${id}`, 'true');
+      } else {
+        localStorage.removeItem(`elena_d${currentDay}_${id}`);
+      }
       updateDailyProgress();
+      renderDayTabs();
+      const itemLabel = CHECK_LABELS[id] || 'Tarea';
+      const stateText = chk.checked ? 'Listo ✅' : 'Desmarcado';
+      showToast(`Día ${currentDay} • ${itemLabel}: ${stateText}`);
+      pushCloudState(`Día ${currentDay} • ${itemLabel} ${stateText}`);
     }
 
     function restoreCheckboxes(d) {
-      ['check-r1-done', 'check-r2-done', 'check-s1-done', 'check-s2-done'].forEach(id => {
+      CHECK_IDS.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           el.checked = localStorage.getItem(`elena_d${d}_${id}`) === 'true';
@@ -3875,9 +4034,8 @@
     }
 
     function updateDailyProgress() {
-      const ids = ['check-r1-done', 'check-r2-done', 'check-s1-done', 'check-s2-done'];
       let done = 0;
-      ids.forEach(id => {
+      CHECK_IDS.forEach(id => {
         const el = document.getElementById(id);
         if (el && el.checked) done++;
       });
@@ -3887,8 +4045,8 @@
     }
 
     function resetDayChecklist() {
-      if (confirm(`¿Limpiar casillas del Día ${currentDay}?`)) {
-        ['check-r1-done', 'check-r2-done', 'check-s1-done', 'check-s2-done'].forEach(id => {
+      if (confirm(`¿Limpiar casillas del Día ${currentDay} para todo el equipo?`)) {
+        CHECK_IDS.forEach(id => {
           const el = document.getElementById(id);
           if (el) {
             el.checked = false;
@@ -3896,7 +4054,9 @@
           }
         });
         updateDailyProgress();
+        renderDayTabs();
         showToast("Casillas reiniciadas");
+        pushCloudState(`Día ${currentDay} reiniciado`);
       }
     }
 
@@ -3937,7 +4097,7 @@
       setTimeout(() => {
         toast.classList.remove('translate-y-0', 'opacity-100');
         toast.classList.add('translate-y-20', 'opacity-0');
-      }, 2200);
+      }, 2600);
     }
 
     // 9. IPHONE SIMULATOR MODAL
@@ -3957,6 +4117,14 @@
       setInterval(updateIslandClocks, 1000);
       switchWeek(1);
       selectDay(2); // Start on Day 2 (Today)
+
+      // Cloud team sync initialization
+      pullCloudState(true);
+      subscribeRealtimeSync();
+      setInterval(() => pullCloudState(false), 12000);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) pullCloudState(false);
+      });
     });
   </script>
 </body>
