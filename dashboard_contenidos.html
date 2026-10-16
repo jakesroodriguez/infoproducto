@@ -3975,7 +3975,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           }),
-          fetch(KV_SET_BASE + hex, { method: 'POST' }),
+          fetch(KV_SET_BASE + hex, { method: 'POST', body: '' }),
           fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
             method: 'POST',
             body: JSON.stringify(payload)
@@ -4004,32 +4004,7 @@
         }
       } catch (e) {}
 
-      // 2. Fallback: Ntfy message history
-      try {
-        const ntfyRes = await fetch(`https://ntfy.sh/${NTFY_TOPIC}/json?poll=1&since=all&t=${Date.now()}`, { cache: 'no-store' });
-        if (ntfyRes.ok) {
-          const text = await ntfyRes.text();
-          const lines = text.trim().split('\n');
-          let latestHex = null;
-          let latestTs = 0;
-          for (const line of lines) {
-            if (!line.trim()) continue;
-            try {
-              const evt = JSON.parse(line);
-              if (evt.event === 'message' && evt.message) {
-                const msg = JSON.parse(evt.message);
-                if (msg.hex && msg.hex.length === 30 && (msg.ts || 0) >= latestTs) {
-                  latestHex = msg.hex;
-                  latestTs = msg.ts || 1;
-                }
-              }
-            } catch (e) {}
-          }
-          if (latestHex) return latestHex;
-        }
-      } catch (e) {}
-
-      // 3. Fallback: KeyVal direct
+      // 2. Fallback: KeyVal direct
       try {
         const res = await fetch(KV_GET_URL + '?t=' + Date.now(), { cache: 'no-store' });
         if (res.ok) {

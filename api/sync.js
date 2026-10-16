@@ -29,7 +29,11 @@ export default async function handler(req, res) {
       };
 
       await Promise.allSettled([
-        fetch(KV_SET_BASE + hex, { method: 'POST' }),
+        fetch(KV_SET_BASE + hex, {
+          method: 'POST',
+          headers: { 'Content-Length': '0' },
+          body: ''
+        }),
         fetch(NTFY_URL, {
           method: 'POST',
           body: JSON.stringify(payload)
@@ -42,45 +46,20 @@ export default async function handler(req, res) {
     }
   }
 
-  // GET request: fetch from both Ntfy history and KeyVal for maximum reliability
+  // GET request: fetch authoritative state from KeyVal
   try {
-    const [kvRes, ntfyRes] = await Promise.allSettled([
-      fetch(KV_GET_URL + '?t=' + Date.now(), { cache: 'no-store' }),
-      fetch(NTFY_URL + '/json?poll=1&since=all', { cache: 'no-store' })
-    ]);
-
-    let latestHex = null;
-    let latestTs = 0;
-
-    if (ntfyRes.status === 'fulfilled' && ntfyRes.value.ok) {
-      const text = await ntfyRes.value.text();
-      const lines = text.trim().split('\n');
-      for (const line of lines) {
-        if (!line.trim()) continue;
-        try {
-          const evt = JSON.parse(line);
-          if (evt.event === 'message' && evt.message) {
-            const msg = JSON.parse(evt.message);
-            if (msg.hex && msg.hex.length === 30 && (msg.ts || 0) >= latestTs) {
-              latestHex = msg.hex;
-              latestTs = msg.ts || (evt.time * 1000) || 1;
-            }
-          }
-        } catch (e) {}
-      }
-    }
-
-    if (kvRes.status === 'fulfilled' && kvRes.value.ok) {
-      const kvText = (await kvRes.value.text()).replace(/"/g, '').trim();
-      if (kvText.length === 30 && !latestHex) {
-        latestHex = kvText;
+    const kvRes = await fetch(KV_GET_URL, { cache: 'no-store' });
+    if (kvRes.ok) {
+      const kvText = (await kvRes.text()).replace(/"/g, '').trim();
+      if (kvText.length === 30) {
+        return res.status(200).json({ ok: true, hex: kvText, ts: Date.now() });
       }
     }
 
     return res.status(200).json({
       ok: true,
-      hex: latestHex || '000000000000000000000000000000',
-      ts: latestTs
+      hex: '000000000000000000000000000000',
+      ts: 0
     });
   } catch (err) {
     return res.status(500).json({ ok: false, error: String(err) });
