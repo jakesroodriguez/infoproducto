@@ -22,6 +22,55 @@ def get_posture_svg(pose_type: str, target_zone: str, day_num: int = 1) -> str:
     return get_posture_svg_v2(pose_type, target_zone, day_num=day_num)
 
 
+def get_exercise_visual(day_num: int, target_zone: str, pose_type: str, title: str) -> str:
+    """Checks if a photographic AI illustration exists for this day; if so, displays it with high-end editorial styling, else falls back to the SVG diagram."""
+    img_dir = os.path.join(os.path.dirname(__file__), "imagenes_ejercicios")
+    for ext in [".jpg", ".jpeg", ".png", ".webp"]:
+        for name in [f"day_{day_num:02d}{ext}", f"day_{day_num}{ext}", f"dia_{day_num:02d}{ext}", f"dia_{day_num}{ext}"]:
+            img_path = os.path.join(img_dir, name)
+            if os.path.exists(img_path):
+                with open(img_path, "rb") as f:
+                    b64 = base64.b64encode(f.read()).decode("utf-8")
+                mime = "image/png" if ext == ".png" else "image/jpeg"
+                return f"""
+                <div class="exercise-photo-frame" style="width: 100%; height: 195px; border-radius: 10px; overflow: hidden; border: 1px solid #D9CEBE; position: relative; background: #FAF6F0; box-shadow: 0 2px 8px rgba(24,34,27,0.06);">
+                  <img src="data:{mime};base64,{b64}" alt="Day {day_num:02d} - {title}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                  <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(242,236,225,0.92); backdrop-filter: blur(4px); border: 0.8px solid #D9CEBE; padding: 3px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 6pt; font-weight: 700; color: #18221B; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+                    {target_zone[:24].upper()}
+                  </div>
+                  <div style="position: absolute; top: 8px; left: 8px; background: rgba(24,34,27,0.85); backdrop-filter: blur(4px); padding: 3px 7px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 5.5pt; font-weight: 700; color: #FAF6F0; letter-spacing: 0.5px;">
+                    COACH ELENA &bull; DAY {day_num:02d}
+                  </div>
+                </div>
+                """
+    return get_posture_svg(pose_type, target_zone, day_num=day_num)
+
+
+def get_bonus_visual(bonus_num: int, target_zone: str, pose_type: str, title: str) -> str:
+    """Checks if a photographic AI illustration exists for this bonus; if so, displays it, else falls back to SVG."""
+    img_dir = os.path.join(os.path.dirname(__file__), "imagenes_ejercicios")
+    for ext in [".jpg", ".jpeg", ".png", ".webp"]:
+        for name in [f"bonus_{bonus_num:02d}{ext}", f"bonus_{bonus_num}{ext}", f"bonus{bonus_num}{ext}"]:
+            img_path = os.path.join(img_dir, name)
+            if os.path.exists(img_path):
+                with open(img_path, "rb") as f:
+                    b64 = base64.b64encode(f.read()).decode("utf-8")
+                mime = "image/png" if ext == ".png" else "image/jpeg"
+                return f"""
+                <div class="exercise-photo-frame" style="width: 100%; height: 195px; border-radius: 10px; overflow: hidden; border: 1px solid #D9CEBE; position: relative; background: #FAF6F0; box-shadow: 0 2px 8px rgba(24,34,27,0.06);">
+                  <img src="data:{mime};base64,{b64}" alt="Bonus {bonus_num} - {title}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                  <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(242,236,225,0.92); backdrop-filter: blur(4px); border: 0.8px solid #D9CEBE; padding: 3px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 6pt; font-weight: 700; color: #18221B;">
+                    {target_zone[:24].upper()}
+                  </div>
+                  <div style="position: absolute; top: 8px; left: 8px; background: rgba(24,34,27,0.85); backdrop-filter: blur(4px); padding: 3px 7px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 5.5pt; font-weight: 700; color: #FAF6F0; letter-spacing: 0.5px;">
+                    BONUS PROTOCOL #{bonus_num}
+                  </div>
+                </div>
+                """
+    return get_posture_svg(pose_type, target_zone, day_num=bonus_num)
+
+
+
 
 # Complete 21-Day Curriculum (1 Dedicated Page Per Day)
 DAYS_DATA = [
@@ -561,7 +610,7 @@ DAYS_DATA = [
 
 def render_daily_page(d: dict, page_num: int) -> str:
     day_num_str = f"{d['day']:02d}"
-    svg_illustration = get_posture_svg(d["pose"], d["target"], day_num=d["day"])
+    svg_illustration = get_exercise_visual(d["day"], d["target"], d["pose"], d["title"])
     steps_html = "".join(
         f'<li><span class="step-idx">{idx + 1}</span><span>{step}</span></li>'
         for idx, step in enumerate(d["movement"])
@@ -1843,7 +1892,7 @@ html_content = f"""<!DOCTYPE html>
       <div class="day-top-grid">
         <div class="diagram-card">
           <div class="section-kicker">30-SECOND DOORWAY / WALL UNLOCK</div>
-          {get_posture_svg("psoas_release", "INSTANTPSOAS UNLOCK")}
+          {get_bonus_visual(1, "INSTANT PSOAS UNLOCK", "psoas_release", "30-Sec Doorway / Wall Quick Relief")}
         </div>
         <div class="why-column">
           <div class="editorial-box-white" style="margin-bottom:0;">
@@ -1907,7 +1956,7 @@ html_content = f"""<!DOCTYPE html>
       <div class="day-top-grid">
         <div class="diagram-card">
           <div class="section-kicker">PARASYMPATHETIC SLEEP SWITCH</div>
-          {get_posture_svg("vagal_flow", "DEEP SLEEP VAGAL CALM")}
+          {get_bonus_visual(2, "DEEP SLEEP VAGAL CALM", "vagal_flow", "Bedroom Wall Sacral Melt")}
         </div>
         <div class="why-column">
           <div class="editorial-box-white" style="margin-bottom:0;">
