@@ -12,204 +12,15 @@ with open(hero_img_path, "rb") as f:
     hero_b64 = base64.b64encode(f.read()).decode("utf-8")
 
 
-def get_posture_svg(pose_type: str, target_zone: str) -> str:
-    """Returns a custom minimalist architectural & somatic SVG diagram for each daily exercise."""
-    wall_left = """
-      <!-- Architectural Wall Structure -->
-      <rect x="22" y="18" width="10" height="164" rx="2" fill="#E5DEC9" stroke="#46594B" stroke-width="1.4"/>
-      <line x1="22" y1="35" x2="32" y2="25" stroke="#8C7A6B" stroke-width="1"/>
-      <line x1="22" y1="55" x2="32" y2="45" stroke="#8C7A6B" stroke-width="1"/>
-      <line x1="22" y1="75" x2="32" y2="65" stroke="#8C7A6B" stroke-width="1"/>
-      <line x1="22" y1="95" x2="32" y2="85" stroke="#8C7A6B" stroke-width="1"/>
-      <line x1="22" y1="115" x2="32" y2="105" stroke="#8C7A6B" stroke-width="1"/>
-      <line x1="22" y1="135" x2="32" y2="125" stroke="#8C7A6B" stroke-width="1"/>
-      <line x1="22" y1="155" x2="32" y2="145" stroke="#8C7A6B" stroke-width="1"/>
-      <line x1="22" y1="175" x2="32" y2="165" stroke="#8C7A6B" stroke-width="1"/>
-      <!-- Floor Line -->
-      <line x1="16" y1="182" x2="204" y2="182" stroke="#46594B" stroke-width="1.5" stroke-linecap="round"/>
-    """
+import sys
+sys.path.append(os.path.dirname(__file__))
+from posture_svg_engine import get_posture_svg_v2
 
-    diagrams = {
-        "palms_press": f"""
-          {wall_left}
-          <!-- Distance Marker -->
-          <line x1="34" y1="168" x2="92" y2="168" stroke="#B86F4C" stroke-width="1.2" stroke-dasharray="3 2"/>
-          <text x="63" y="163" font-family="JetBrains Mono, monospace" font-size="6.5" fill="#B86F4C" text-anchor="middle">ARM'S LENGTH</text>
-          <!-- Somatic Figure Facing Wall -->
-          <circle cx="92" cy="54" r="10" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <!-- Arms Pressing Wall -->
-          <path d="M88 68 L34 72" stroke="#18221B" stroke-width="2.2" stroke-linecap="round"/>
-          <circle cx="34" cy="72" r="3.5" fill="#B86F4C"/>
-          <!-- Torso & Gentle Hinge -->
-          <path d="M92 64 Q98 92 102 116" fill="none" stroke="#18221B" stroke-width="2.4" stroke-linecap="round"/>
-          <!-- Target Decompression Glow (L4-L5 & Thoracic) -->
-          <circle cx="99" cy="102" r="9" fill="#B86F4C" fill-opacity="0.18" stroke="#B86F4C" stroke-width="1.2" stroke-dasharray="2 2"/>
-          <circle cx="99" cy="102" r="3.5" fill="#B86F4C"/>
-          <!-- Legs Standing -->
-          <path d="M102 116 L96 150 L96 181" fill="none" stroke="#18221B" stroke-width="2.2" stroke-linecap="round"/>
-          <!-- Decompression Vector Arrows -->
-          <path d="M114 82 Q122 98 118 114" fill="none" stroke="#46594B" stroke-width="1.4" stroke-dasharray="2 2"/>
-          <polygon points="118,116 115,110 121,111" fill="#46594B"/>
-          <text x="148" y="42" font-family="JetBrains Mono, monospace" font-size="7" font-weight="600" fill="#46594B">AXIAL OFF-LOAD</text>
-          <text x="148" y="53" font-family="Plus Jakarta Sans, sans-serif" font-size="6.5" fill="#647A68">Palms at chest level</text>
-        """,
-        "l_traction": f"""
-          {wall_left}
-          <!-- L-Shape Hinge Figure -->
-          <circle cx="78" cy="78" r="9" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <!-- Extended Arms to Wall -->
-          <line x1="34" y1="84" x2="128" y2="84" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <circle cx="34" cy="84" r="3.5" fill="#B86F4C"/>
-          <!-- Lumbar Decompression Zone -->
-          <circle cx="126" cy="84" r="11" fill="#B86F4C" fill-opacity="0.18" stroke="#B86F4C" stroke-width="1.2" stroke-dasharray="2 2"/>
-          <circle cx="126" cy="84" r="4" fill="#B86F4C"/>
-          <!-- Soft Micro-Bent Knees -->
-          <path d="M128 84 L122 134 L128 181" fill="none" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <!-- Traction Arrow Backward -->
-          <line x1="138" y1="84" x2="168" y2="84" stroke="#B86F4C" stroke-width="1.5"/>
-          <polygon points="172,84 165,80 165,88" fill="#B86F4C"/>
-          <text x="155" y="74" font-family="JetBrains Mono, monospace" font-size="6.8" font-weight="700" fill="#B86F4C" text-anchor="middle">L4-L5 TRACTION</text>
-          <text x="145" y="138" font-family="JetBrains Mono, monospace" font-size="6.5" fill="#46594B">SOFT KNEES</text>
-        """,
-        "spinal_wave": f"""
-          {wall_left}
-          <!-- Standing Wave Figure -->
-          <circle cx="88" cy="52" r="9.5" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <path d="M82 68 L34 78" stroke="#18221B" stroke-width="2" stroke-linecap="round"/>
-          <!-- Dual Curve Spine (Cat/Cow Wave) -->
-          <path d="M88 62 Q76 88 94 116" fill="none" stroke="#46594B" stroke-width="2.2" stroke-dasharray="3 2"/>
-          <path d="M88 62 Q104 88 94 116" fill="none" stroke="#18221B" stroke-width="2.4" stroke-linecap="round"/>
-          <!-- Target Nodes Along Spine -->
-          <circle cx="95" cy="76" r="3" fill="#B86F4C"/>
-          <circle cx="98" cy="92" r="3.5" fill="#B86F4C"/>
-          <circle cx="95" cy="108" r="3" fill="#B86F4C"/>
-          <path d="M94 116 L90 150 L92 181" fill="none" stroke="#18221B" stroke-width="2.2" stroke-linecap="round"/>
-          <text x="148" y="86" font-family="JetBrains Mono, monospace" font-size="7" font-weight="600" fill="#B86F4C">SEGMENTAL WAVE</text>
-          <text x="148" y="97" font-family="Plus Jakarta Sans, sans-serif" font-size="6.5" fill="#46594B">Inhale arch · Exhale round</text>
-        """,
-        "lateral_arc": f"""
-          {wall_left}
-          <!-- Sideways Ribcage Arc -->
-          <circle cx="86" cy="48" r="9.5" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <path d="M78 60 L34 62" stroke="#18221B" stroke-width="2" stroke-linecap="round"/>
-          <!-- Overhead Reach Arc -->
-          <path d="M86 58 Q72 26 42 34" fill="none" stroke="#B86F4C" stroke-width="1.8" stroke-dasharray="3 2"/>
-          <!-- Curved Lateral Torso -->
-          <path d="M86 58 Q112 88 96 118" fill="none" stroke="#18221B" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="104" cy="90" r="10" fill="#B86F4C" fill-opacity="0.18" stroke="#B86F4C" stroke-width="1.2" stroke-dasharray="2 2"/>
-          <circle cx="104" cy="90" r="3.5" fill="#B86F4C"/>
-          <path d="M96 118 L92 181" fill="none" stroke="#18221B" stroke-width="2.2" stroke-linecap="round"/>
-          <text x="148" y="88" font-family="JetBrains Mono, monospace" font-size="7" font-weight="600" fill="#B86F4C">QL &amp; RIBCAGE ARC</text>
-          <text x="148" y="99" font-family="Plus Jakarta Sans, sans-serif" font-size="6.5" fill="#46594B">Side-body decompression</text>
-        """,
-        "hip_circles": f"""
-          {wall_left}
-          <!-- Upright Side Support Figure -->
-          <circle cx="88" cy="46" r="9.5" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <line x1="88" y1="56" x2="88" y2="112" stroke="#18221B" stroke-width="2.4" stroke-linecap="round"/>
-          <line x1="88" y1="74" x2="34" y2="74" stroke="#18221B" stroke-width="2.1" stroke-linecap="round"/>
-          <circle cx="34" cy="74" r="3.5" fill="#46594B"/>
-          <!-- Standing Support Leg -->
-          <line x1="84" y1="112" x2="84" y2="181" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <!-- Lifted Knee & Orbital Circle -->
-          <path d="M90 112 L114 132 L110 162" fill="none" stroke="#18221B" stroke-width="2.2" stroke-linecap="round"/>
-          <circle cx="90" cy="112" r="9" fill="#B86F4C" fill-opacity="0.2" stroke="#B86F4C" stroke-width="1.2"/>
-          <circle cx="90" cy="112" r="3.5" fill="#B86F4C"/>
-          <ellipse cx="116" cy="132" rx="16" ry="11" fill="none" stroke="#B86F4C" stroke-width="1.4" stroke-dasharray="3 2"/>
-          <text x="152" y="108" font-family="JetBrains Mono, monospace" font-size="7" font-weight="600" fill="#B86F4C">SYNOVIAL ORBIT</text>
-          <text x="152" y="119" font-family="Plus Jakarta Sans, sans-serif" font-size="6.5" fill="#46594B">5 slow circles each way</text>
-        """,
-        "pelvic_tilt": f"""
-          {wall_left}
-          <!-- Back Against Wall Figure -->
-          <circle cx="48" cy="46" r="9.5" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <!-- Upper Back & Sacrum Flush to Wall -->
-          <path d="M36 58 Q42 84 35 112" fill="none" stroke="#18221B" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- Lumbar imprint arrow -->
-          <line x1="60" y1="92" x2="38" y2="92" stroke="#B86F4C" stroke-width="1.8"/>
-          <polygon points="35,92 41,88 41,96" fill="#B86F4C"/>
-          <circle cx="38" cy="106" r="9" fill="#B86F4C" fill-opacity="0.2" stroke="#B86F4C" stroke-width="1.2" stroke-dasharray="2 2"/>
-          <!-- Legs with 4-inch heel offset -->
-          <path d="M36 112 L52 146 L56 181" fill="none" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <!-- Pelvic Clock Diagram on Right -->
-          <circle cx="145" cy="96" r="24" fill="#FAF6F0" stroke="#46594B" stroke-width="1.3"/>
-          <path d="M145 78 A18 18 0 0 1 145 114" fill="none" stroke="#B86F4C" stroke-width="1.6" stroke-dasharray="2 2"/>
-          <text x="145" y="68" font-family="JetBrains Mono, monospace" font-size="6.5" fill="#46594B" text-anchor="middle">12 O'CLOCK TUCK</text>
-          <text x="145" y="130" font-family="JetBrains Mono, monospace" font-size="6.5" fill="#647A68" text-anchor="middle">6 O'CLOCK RELEASE</text>
-        """,
-        "psoas_release": f"""
-          {wall_left}
-          <!-- Standing Staggered Stance Facing Wall -->
-          <circle cx="82" cy="46" r="9.5" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <line x1="78" y1="66" x2="34" y2="68" stroke="#18221B" stroke-width="2.1" stroke-linecap="round"/>
-          <line x1="82" y1="56" x2="84" y2="110" stroke="#18221B" stroke-width="2.4" stroke-linecap="round"/>
-          <!-- Front Leg -->
-          <path d="M84 110 L70 144 L70 181" fill="none" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <!-- Back Leg (Psoas Lengthening) -->
-          <path d="M84 110 L112 146 L128 181" fill="none" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <!-- Glowing Psoas Line -->
-          <path d="M83 94 Q88 112 100 130" fill="none" stroke="#B86F4C" stroke-width="3" stroke-linecap="round"/>
-          <circle cx="88" cy="112" r="9" fill="#B86F4C" fill-opacity="0.18" stroke="#B86F4C" stroke-width="1.2" stroke-dasharray="2 2"/>
-          <text x="148" y="96" font-family="JetBrains Mono, monospace" font-size="7" font-weight="600" fill="#B86F4C">ZERO-KNEEL PSOAS</text>
-          <text x="148" y="107" font-family="Plus Jakarta Sans, sans-serif" font-size="6.5" fill="#46594B">Tailbone softly tucked</text>
-        """,
-        "knee_glide": f"""
-          {wall_left}
-          <!-- Wall-Supported Knee & Ankle Decompression -->
-          <circle cx="80" cy="48" r="9" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <line x1="76" y1="68" x2="34" y2="68" stroke="#18221B" stroke-width="2" stroke-linecap="round"/>
-          <line x1="80" y1="58" x2="84" y2="112" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <path d="M84 112 L74 146 L82 181" fill="none" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <!-- Target Glow on Knee & Ankle -->
-          <circle cx="74" cy="146" r="10" fill="#B86F4C" fill-opacity="0.2" stroke="#B86F4C" stroke-width="1.3" stroke-dasharray="2 2"/>
-          <circle cx="74" cy="146" r="3.5" fill="#B86F4C"/>
-          <circle cx="82" cy="177" r="6" fill="#46594B" fill-opacity="0.2" stroke="#46594B" stroke-width="1.2"/>
-          <text x="145" y="138" font-family="JetBrains Mono, monospace" font-size="7" font-weight="600" fill="#B86F4C">PATELLA OFFLOAD</text>
-          <text x="145" y="149" font-family="Plus Jakarta Sans, sans-serif" font-size="6.5" fill="#46594B">70% weight on wall hands</text>
-        """,
-        "wall_angels": f"""
-          {wall_left}
-          <!-- Back Against Wall + Cactus Arms -->
-          <circle cx="44" cy="46" r="9.5" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <line x1="36" y1="56" x2="36" y2="114" stroke="#18221B" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M36 114 L48 181" fill="none" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <!-- Front View Inset Diagram of Cactus Arms -->
-          <circle cx="138" cy="60" r="9" fill="#FAF6F0" stroke="#18221B" stroke-width="1.7"/>
-          <line x1="138" y1="70" x2="138" y2="124" stroke="#18221B" stroke-width="2.2" stroke-linecap="round"/>
-          <!-- W / Cactus Arms -->
-          <path d="M108 58 L116 84 L138 84 L160 84 L168 58" fill="none" stroke="#18221B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- Upward Glide Arrows -->
-          <line x1="108" y1="52" x2="108" y2="36" stroke="#B86F4C" stroke-width="1.5"/>
-          <polygon points="108,33 105,39 111,39" fill="#B86F4C"/>
-          <line x1="168" y1="52" x2="168" y2="36" stroke="#B86F4C" stroke-width="1.5"/>
-          <polygon points="168,33 165,39 171,39" fill="#B86F4C"/>
-          <circle cx="138" cy="84" r="9" fill="#B86F4C" fill-opacity="0.18" stroke="#B86F4C" stroke-width="1.2" stroke-dasharray="2 2"/>
-          <text x="138" y="146" font-family="JetBrains Mono, monospace" font-size="6.8" font-weight="600" fill="#46594B" text-anchor="middle">SCAPULAR GLIDE</text>
-        """,
-        "vagal_flow": f"""
-          {wall_left}
-          <!-- Restorative Forehead on Hands at Wall -->
-          <circle cx="56" cy="58" r="9.5" fill="#FAF6F0" stroke="#18221B" stroke-width="1.8"/>
-          <path d="M52 64 L34 58" stroke="#18221B" stroke-width="2.2" stroke-linecap="round"/>
-          <path d="M58 68 Q64 94 64 118 L62 181" fill="none" stroke="#18221B" stroke-width="2.3" stroke-linecap="round"/>
-          <!-- Concentric Vagal Calm Waves -->
-          <circle cx="62" cy="82" r="12" fill="none" stroke="#B86F4C" stroke-width="1.2" stroke-dasharray="2 2"/>
-          <circle cx="62" cy="82" r="22" fill="none" stroke="#46594B" stroke-width="1" stroke-dasharray="3 3"/>
-          <circle cx="62" cy="82" r="32" fill="none" stroke="#647A68" stroke-width="0.8" stroke-dasharray="4 4"/>
-          <text x="145" y="78" font-family="JetBrains Mono, monospace" font-size="7" font-weight="600" fill="#46594B">VAGUS NERVE RESET</text>
-          <text x="145" y="90" font-family="Plus Jakarta Sans, sans-serif" font-size="6.5" fill="#B86F4C">4s Inhale · 6s Exhale</text>
-        """
-    }
 
-    inner = diagrams.get(pose_type, diagrams["palms_press"])
-    return f"""
-    <svg viewBox="0 0 220 195" class="posture-svg" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="2" width="216" height="191" rx="10" fill="#FAF6F0" stroke="#D9CEBE" stroke-width="1"/>
-      {inner}
-      <rect x="118" y="158" width="90" height="20" rx="4" fill="#F2ECE1" stroke="#D9CEBE" stroke-width="0.8"/>
-      <text x="163" y="171" font-family="JetBrains Mono, monospace" font-size="6.2" font-weight="600" fill="#18221B" text-anchor="middle">{target_zone[:20].upper()}</text>
-    </svg>
-    """
+def get_posture_svg(pose_type: str, target_zone: str, day_num: int = 1) -> str:
+    """Returns a bespoke volumetric somatic anatomical SVG diagram for each daily exercise."""
+    return get_posture_svg_v2(pose_type, target_zone, day_num=day_num)
+
 
 
 # Complete 21-Day Curriculum (1 Dedicated Page Per Day)
@@ -750,7 +561,7 @@ DAYS_DATA = [
 
 def render_daily_page(d: dict, page_num: int) -> str:
     day_num_str = f"{d['day']:02d}"
-    svg_illustration = get_posture_svg(d["pose"], d["target"])
+    svg_illustration = get_posture_svg(d["pose"], d["target"], day_num=d["day"])
     steps_html = "".join(
         f'<li><span class="step-idx">{idx + 1}</span><span>{step}</span></li>'
         for idx, step in enumerate(d["movement"])
