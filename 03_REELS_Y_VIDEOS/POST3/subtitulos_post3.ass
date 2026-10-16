@@ -1,0 +1,61 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Hook, Arial, 74, &H00FFFFFF, &H000000FF, &H00000000, &H80000000, 1, 0, 0, 0, 100, 100, 0, 0, 1, 6, 2, 2, 70, 70, 780, 1
+Style: Subtitle, Arial, 64, &H00FFFFFF, &H000000FF, &H00000000, &H80000000, 1, 0, 0, 0, 100, 100, 0, 0, 1, 5, 2, 2, 80, 80, 380, 1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 1,0:00:00.00,0:00:03.55,Hook,,0,0,0,,{\c&H0000FFFF&}STIFF HIPS or KNEES\N{\c&H00FFFFFF&}getting out of bed?\N{\c&H000000FF&}STOP doing this 🛑
+Dialogue: 0,0:00:03.55,0:00:04.15,Subtitle,,0,0,0,,tight and locked
+Dialogue: 0,0:00:04.10,0:00:04.70,Subtitle,,0,0,0,,the moment you
+Dialogue: 0,0:00:04.60,0:00:05.20,Subtitle,,0,0,0,,get out of
+Dialogue: 0,0:00:05.04,0:00:05.64,Subtitle,,0,0,0,,bed,
+Dialogue: 0,0:00:05.94,0:00:06.66,Subtitle,,0,0,0,,listen to me.
+Dialogue: 0,0:00:06.86,0:00:07.78,Subtitle,,0,0,0,,Please stop forcing
+Dialogue: 0,0:00:07.78,0:00:08.72,Subtitle,,0,0,0,,deep squats or
+Dialogue: 0,0:00:08.72,0:00:09.88,Subtitle,,0,0,0,,aggressive floor lunges.
+Dialogue: 0,0:00:10.01,0:00:10.96,Subtitle,,0,0,0,,We begin by
+Dialogue: 0,0:00:10.96,0:00:11.95,Subtitle,,0,0,0,,finding our center.
+Dialogue: 0,0:00:12.37,0:00:12.97,Subtitle,,0,0,0,,Let your breath
+Dialogue: 0,0:00:12.93,0:00:13.79,Subtitle,,0,0,0,,be soft and
+Dialogue: 0,0:00:13.79,0:00:14.39,Subtitle,,0,0,0,,natural.
+Dialogue: 0,0:00:14.61,0:00:15.30,Subtitle,,0,0,0,,Feel the tension
+Dialogue: 0,0:00:15.30,0:00:16.27,Subtitle,,0,0,0,,leave your shoulders.
+Dialogue: 0,0:00:16.96,0:00:17.69,Subtitle,,0,0,0,,This practice is
+Dialogue: 0,0:00:17.69,0:00:18.39,Subtitle,,0,0,0,,about presence.
+Dialogue: 0,0:00:18.75,0:00:19.57,Subtitle,,0,0,0,,Just breathe and
+Dialogue: 0,0:00:19.57,0:00:20.17,Subtitle,,0,0,0,,be.
+Dialogue: 0,0:00:20.01,0:00:20.63,Subtitle,,0,0,0,,Instead,
+Dialogue: 0,0:00:21.05,0:00:21.69,Subtitle,,0,0,0,,walk over to
+Dialogue: 0,0:00:21.69,0:00:22.35,Subtitle,,0,0,0,,any wall in
+Dialogue: 0,0:00:22.35,0:00:23.33,Subtitle,,0,0,0,,your home.
+Dialogue: 0,0:00:23.89,0:00:24.73,Subtitle,,0,0,0,,Rest one hand
+Dialogue: 0,0:00:24.73,0:00:25.33,Subtitle,,0,0,0,,on the wall
+Dialogue: 0,0:00:25.27,0:00:25.99,Subtitle,,0,0,0,,for balance,
+Dialogue: 0,0:00:26.67,0:00:27.33,Subtitle,,0,0,0,,so your nervous
+Dialogue: 0,0:00:27.33,0:00:28.57,Subtitle,,0,0,0,,system feels safe
+Dialogue: 0,0:00:28.57,0:00:29.55,Subtitle,,0,0,0,,with zero pressure.
+Dialogue: 0,0:00:30.02,0:00:31.28,Subtitle,,0,0,0,,Now gently draw
+Dialogue: 0,0:00:31.28,0:00:32.36,Subtitle,,0,0,0,,tiny circles with
+Dialogue: 0,0:00:32.36,0:00:32.96,Subtitle,,0,0,0,,your knee.
+Dialogue: 0,0:00:33.40,0:00:34.41,Subtitle,,0,0,0,,Just 30 seconds
+Dialogue: 0,0:00:34.41,0:00:35.36,Subtitle,,0,0,0,,lubricates the hip
+Dialogue: 0,0:00:35.36,0:00:36.30,Subtitle,,0,0,0,,socket with natural
+Dialogue: 0,0:00:36.30,0:00:37.22,Subtitle,,0,0,0,,synovial fluid,
+Dialogue: 0,0:00:37.80,0:00:38.66,Subtitle,,0,0,0,,releasing years of
+Dialogue: 0,0:00:38.66,0:00:39.26,Subtitle,,0,0,0,,built up morning
+Dialogue: 0,0:00:39.22,0:00:39.82,Subtitle,,0,0,0,,tension.
+Dialogue: 0,0:00:40.02,0:00:41.08,Subtitle,,0,0,0,,You can do
+Dialogue: 0,0:00:41.08,0:00:41.68,Subtitle,,0,0,0,,this.
+Dialogue: 0,0:00:41.86,0:00:42.92,Subtitle,,0,0,0,,Join me and
+Dialogue: 0,0:00:42.92,0:00:43.64,Subtitle,,0,0,0,,let's take the
+Dialogue: 0,0:00:43.64,0:00:44.64,Subtitle,,0,0,0,,first step together.
+Dialogue: 0,0:00:45.82,0:00:46.56,Subtitle,,0,0,0,,Just click the
+Dialogue: 0,0:00:46.56,0:00:47.38,Subtitle,,0,0,0,,link below to
+Dialogue: 0,0:00:47.38,0:00:48.34,Subtitle,,0,0,0,,get started today.

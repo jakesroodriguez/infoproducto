@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descargar POST 3 - Reel Elena</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 28px 24px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    }
+    .badge {
+      display: inline-block;
+      background: #059669;
+      color: #ecfdf5;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    p {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 22px;
+    }
+    .preview-box {
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: #000;
+      border: 1px solid #334155;
+    }
+    video {
+      width: 100%;
+      max-height: 380px;
+      display: block;
+      object-fit: contain;
+    }
+    .btn-download {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 16px 20px;
+      border-radius: 14px;
+      box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-download:hover, .btn-download:active {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 20px -3px rgba(37, 99, 235, 0.5);
+    }
+    .meta {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #64748b;
+    }
+    .tip {
+      margin-top: 20px;
+      padding: 12px;
+      background: #0f172a;
+      border-radius: 10px;
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: left;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">🎬 VIDEO FINALIZADO</div>
+    <h1>Reel Día 2 - POST 3</h1>
+    <p>Con gancho Remotion animado, subtítulos dinámicos y música.</p>
+
+    <div class="preview-box">
+      <video controls playsinline preload="metadata">
+        <source src="/03_REELS_Y_VIDEOS/POST3/POST3.mp4" type="video/mp4">
+        Tu navegador no soporta el reproductor de video.
+      </video>
+    </div>
+
+    <a href="/03_REELS_Y_VIDEOS/POST3/POST3.mp4" download="POST3.mp4" class="btn-download" id="dlBtn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      DESCARGAR EN MI MÓVIL
+    </a>
+
+    <div class="meta">Formato: MP4 1080x1920 (9:16) • Tamaño: ~24.7 MB</div>
+
+    <div class="tip">
+      💡 <b>En iPhone:</b> Si se abre en pantalla completa, toca el icono de <b>Compartir</b> ➔ <b>Guardar vídeo</b>.<br>
+      💡 <b>En Android:</b> La descarga comenzará automáticamente o mantén pulsado el botón.
+    </div>
+  </div>
+</body>
+</html>

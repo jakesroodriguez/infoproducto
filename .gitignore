@@ -1,0 +1,33 @@
+# ========================================================
+# .gitignore para Infoproducto (Elena Vance Studio)
+# Optimizado para GitHub y Vercel (< 50MB en total)
+# ========================================================
+
+# 1. Cursos y vídeos pesados de referencia (>100MB bloqueado por GitHub)
+06_CURSO_REFERENCIA/
+*.mp4.part
+
+# 2. Vídeos locales generados pesados (superan recomendación GitHub / límite Vercel Hobby)
+03_REELS_Y_VIDEOS/POST1/POST1.mp4
+03_REELS_Y_VIDEOS/POST2/POST2.mp4
+
+# 3. Clips intermedios y secuencias de frames (no necesarios para la web)
+03_REELS_Y_VIDEOS/**/clips/
+03_REELS_Y_VIDEOS/**/CLIPS/
+03_REELS_Y_VIDEOS/POST3/remotion_hook_frames/
+
+# 4. Archivos comprimidos y temporales
+*.zip
+*.tar.gz
+*.rar
+
+# 5. Entornos y temporales de Python / SO
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/index.html" },
+    { "source": "/tienda", "destination": "/01_TIENDA_Y_WEB/landing_page.html" },
+    { "source": "/landing", "destination": "/01_TIENDA_Y_WEB/landing_page.html" },
+    { "source": "/guia", "destination": "/02_PRODUCTO_GUIA/guide_printable.html" },
+    { "source": "/guia-pdf", "destination": "/02_PRODUCTO_GUIA/The_21_Day_Gentle_Wall_Reset_Guide.pdf" },
+    { "source": "/descargar", "destination": "/descargar.html" }
+  ]
+}
