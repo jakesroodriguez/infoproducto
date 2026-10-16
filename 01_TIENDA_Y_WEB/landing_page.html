@@ -152,16 +152,19 @@
                         </span>
                     </div>
 
-                    <!-- Page Selector Tabs -->
-                    <div class="grid grid-cols-3 gap-1.5 mb-2.5">
-                        <button type="button" onclick="switchGuidePreview(1)" id="tab-preview-1" class="py-1.5 px-2 rounded-xl text-[11px] font-bold bg-sage-600 text-white transition cursor-pointer text-center">
-                            Page 04 · Spine
+                    <!-- Page Selector Tabs (4 Key Highlights from 30-Page Guide) -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mb-2.5">
+                        <button type="button" onclick="switchGuidePreview(1)" id="tab-preview-1" class="py-1.5 px-2 rounded-xl text-[11px] font-bold bg-sage-600 text-white transition cursor-pointer text-center shadow-xs">
+                            Pág 05 · Columna
                         </button>
                         <button type="button" onclick="switchGuidePreview(2)" id="tab-preview-2" class="py-1.5 px-2 rounded-xl text-[11px] font-semibold bg-sage-50 text-sage-800 hover:bg-sage-100 border border-sage-200/70 transition cursor-pointer text-center">
-                            Page 11 · Hips
+                            Pág 12 · Caderas
                         </button>
                         <button type="button" onclick="switchGuidePreview(3)" id="tab-preview-3" class="py-1.5 px-2 rounded-xl text-[11px] font-semibold bg-sage-50 text-sage-800 hover:bg-sage-100 border border-sage-200/70 transition cursor-pointer text-center">
-                            Page 19 · Tracker
+                            Pág 19 · Postura
+                        </button>
+                        <button type="button" onclick="switchGuidePreview(4)" id="tab-preview-4" class="py-1.5 px-2 rounded-xl text-[11px] font-semibold bg-sage-50 text-sage-800 hover:bg-sage-100 border border-sage-200/70 transition cursor-pointer text-center">
+                            Pág 28 · Tracker
                         </button>
                     </div>
 
@@ -169,21 +172,29 @@
                     <div id="guide-preview-box" class="bg-offwhite rounded-2xl p-3.5 border border-gray-200/90 text-left space-y-2">
                         <div class="flex items-center justify-between border-b border-gray-200/70 pb-2">
                             <div>
-                                <span id="preview-week-tag" class="text-[10px] font-bold uppercase tracking-wider text-sage-600 block">Week 1 · Day 1 Morning Protocol</span>
-                                <h3 id="preview-title" class="text-sm font-extrabold text-charcoal">L4–L5 Lumbar Wall Decompression</h3>
+                                <span id="preview-week-tag" class="text-[10px] font-bold uppercase tracking-wider text-sage-600 block">Semana 1 · Día 01 (Página 05)</span>
+                                <h3 id="preview-title" class="text-sm font-extrabold text-charcoal">The Wall Palms Press</h3>
                             </div>
-                            <span id="preview-badge" class="text-[11px] font-mono font-semibold bg-white border border-gray-200 px-2 py-0.5 rounded-lg text-charcoal">Duration: 90 sec</span>
+                            <span id="preview-badge" class="text-[11px] font-mono font-semibold bg-white border border-gray-200 px-2 py-0.5 rounded-lg text-charcoal">5 Min · 3x45s</span>
                         </div>
                         <p id="preview-desc" class="text-xs text-softgray leading-relaxed">
-                            <strong>Posture Cue:</strong> Stand 6 inches from the wall. Rest your tailbone and shoulder blades flat against the surface. Inhale for 4 seconds into your lower ribs, allowing gravity to unload 70% of lumbar disc pressure without bending your knees.
+                            <strong>Clave Postural:</strong> De pie frente a la pared a un brazo de distancia. Apoya ambas palmas al nivel del pecho y da un paso atrás. La gravedad descarga un 70% de compresión en L4–L5 sin que tengas que doblar las rodillas.
                         </p>
                         <div class="flex items-center justify-between pt-1 text-[11px] text-emerald-800 font-semibold">
                             <span id="preview-benefit" class="flex items-center gap-1">
                                 <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                                <span>Target: Morning lower-back concrete stiffness</span>
+                                <span>Objetivo: Rigidez lumbar matutina de cemento</span>
                             </span>
-                            <span class="text-sage-600 font-mono text-[10px]">+ HD Video Link Included</span>
+                            <span class="text-sage-600 font-mono text-[10px]">+ Diagrama SVG Anatómico</span>
                         </div>
+                    </div>
+
+                    <!-- Link to Live 30-Page Guide -->
+                    <div class="mt-2.5 text-center">
+                        <a href="/02_PRODUCTO_GUIA/guide_printable.html" target="_blank" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-sage-700 hover:text-sage-900 bg-sage-50 hover:bg-sage-100 px-3 py-1.5 rounded-full transition border border-sage-200/90 shadow-2xs">
+                            <span>📖 Abrir muestra en vivo de la Guía Editorial (30 Páginas A4)</span>
+                            <svg class="w-3 h-3 text-sage-600" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -372,10 +383,10 @@
                     </div>
                     <div class="flex-1">
                         <div class="flex items-center justify-between">
-                            <strong class="text-xs font-bold text-charcoal">21-Day Wall Reset Master Guide</strong>
-                            <span class="text-[10px] line-through text-gray-400 font-semibold">$27 Value</span>
+                            <strong class="text-xs font-bold text-charcoal">21-Day Wall Reset Master Guide (Edición 30 Páginas A4)</strong>
+                            <span class="text-[10px] line-through text-gray-400 font-semibold">$37 Value</span>
                         </div>
-                        <p class="text-[10px] text-gray-500">Interactive 3-week progressive PDF schedule</p>
+                        <p class="text-[10px] text-gray-500">1 página dedicada por día, diagramas SVG y respiración vagal</p>
                     </div>
                 </div>
 
@@ -388,7 +399,7 @@
                             <strong class="text-xs font-bold text-charcoal">Step-By-Step Video Vault</strong>
                             <span class="text-[10px] line-through text-gray-400 font-semibold">$39 Value</span>
                         </div>
-                        <p class="text-[10px] text-gray-500">Follow-along videos with Coach Elena</p>
+                        <p class="text-[10px] text-gray-500">Vídeos guiados paso a paso con Coach Elena</p>
                     </div>
                 </div>
 
@@ -398,10 +409,10 @@
                     </div>
                     <div class="flex-1">
                         <div class="flex items-center justify-between">
-                            <strong class="text-xs font-bold text-sage-900">BONUS 1: 30-Sec Car & Desk Sheet</strong>
-                            <span class="text-[10px] font-black text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">FREE</span>
+                            <strong class="text-xs font-bold text-sage-900">BONUS 1: Hoja de Emergencia (Coche, Escritorio & Viajes)</strong>
+                            <span class="text-[10px] font-black text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">GRATIS</span>
                         </div>
-                        <p class="text-[10px] text-sage-700">Quick wall reset when sitting for hours</p>
+                        <p class="text-[10px] text-sage-700">Reseteo express en 30 segundos tras estar sentada</p>
                     </div>
                 </div>
 
@@ -411,20 +422,33 @@
                     </div>
                     <div class="flex-1">
                         <div class="flex items-center justify-between">
-                            <strong class="text-xs font-bold text-sage-900">BONUS 2: Nighttime Bed Prep Routine</strong>
-                            <span class="text-[10px] font-black text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">FREE</span>
+                            <strong class="text-xs font-bold text-sage-900">BONUS 2: Rutina Somática Nocturna Pre-Cama</strong>
+                            <span class="text-[10px] font-black text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">GRATIS</span>
                         </div>
-                        <p class="text-[10px] text-sage-700">Sleep through without hip or back spasms</p>
+                        <p class="text-[10px] text-sage-700">Apaga espasmos de cadera y duerme de un tirón</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 p-3 bg-sage-50 rounded-xl border border-sage-300">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <strong class="text-xs font-bold text-sage-900">BONUS 3: Tracker Maestro de 21 Días + Certificado</strong>
+                            <span class="text-[10px] font-black text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">GRATIS</span>
+                        </div>
+                        <p class="text-[10px] text-sage-700">Registro de hábitos imprimible + diploma de graduación firmado</p>
                     </div>
                 </div>
             </div>
 
             <!-- Clean Value Summary Pill (Non-Aggressive) -->
             <div class="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-xs px-1">
-                <span class="text-[11px] text-softgray font-medium">Combined value: <span class="line-through text-gray-400 font-normal">$85.00</span></span>
+                <span class="text-[11px] text-softgray font-medium">Valor total combinado: <span class="line-through text-gray-400 font-normal">$110.00</span></span>
                 <span class="font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1">
                     <svg class="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                    <span>Instant Digital Bundle</span>
+                    <span>Todo por solo $13.90 USD</span>
                 </span>
             </div>
         </section>
@@ -675,28 +699,35 @@
 
     <!-- Interactive Conversion Engine (Guide Preview + Live Diagnostic + Persistent Timer) -->
     <script>
-        // 1. Interactive "Peek Inside the Guide" Data
+        // 1. Interactive "Peek Inside the Guide" Data (30-Page Master Edition)
         const GUIDE_PAGES = {
             1: {
-                week: "Week 1 · Day 1 Morning Protocol (Page 04)",
-                title: "L4–L5 Lumbar Wall Decompression",
-                badge: "Duration: 90 sec",
-                desc: "<strong>Posture Cue:</strong> Stand 6 inches from the wall. Rest your tailbone and shoulder blades flat against the surface. Inhale for 4 seconds into your lower ribs, allowing gravity to unload 70% of lumbar disc pressure without bending your knees.",
-                benefit: "Target: Morning lower-back concrete stiffness"
+                week: "Semana 1 · Día 01 (Página 05)",
+                title: "The Wall Palms Press",
+                badge: "5 Min · 3x45s",
+                desc: "<strong>Clave Postural:</strong> De pie frente a la pared a un brazo de distancia. Apoya ambas palmas a la altura del pecho y da un paso atrás. La gravedad descarga un 70% de compresión en L4–L5 sin que tengas que doblar las rodillas.",
+                benefit: "Objetivo: Rigidez lumbar matutina de cemento"
             },
             2: {
-                week: "Week 2 · Day 9 Mobility Flow (Page 11)",
-                title: "Standing Pelvic & Hip Socket Glides",
-                badge: "Duration: 2 min",
-                desc: "<strong>Posture Cue:</strong> With one hand lightly touching the wall for balance, perform slow micro-pendulum circles from the hip joint. Releases deep psoas & piriformis locking caused by hours of sitting or driving.",
-                benefit: "Target: Clicking hips & pinched sciatic nerve tension"
+                week: "Semana 2 · Día 08 (Página 12)",
+                title: "Supported Standing Hip Circles",
+                badge: "5 Min · 2x60s",
+                desc: "<strong>Clave Postural:</strong> Con una mano apoyada en la pared para soporte seguro, realiza micro-círculos suaves desde la cavidad de la cadera. Lubrica el líquido sinovial sin sentadillas agresivas ni peso sobre las rodillas.",
+                benefit: "Objetivo: Chasquidos de cadera y pinzamiento del nervio ciático"
             },
             3: {
-                week: "Week 3 · Printable Habit Sheet (Page 19)",
-                title: "21-Day Somatic Progress & Relief Tracker",
-                badge: "5 Min / Morning",
-                desc: "<strong>How It Works:</strong> Check off each 5-minute morning session right next to your coffee maker. Includes 1-tap QR/links to Coach Elena's follow-along video vault for every single day.",
-                benefit: "Target: Permanent joint freedom & zero floor strain"
+                week: "Semana 3 · Día 15 (Página 19)",
+                title: "Supported Wall Angels",
+                badge: "5 Min · 3x40s",
+                desc: "<strong>Clave Postural:</strong> Apoya la espalda alta y los omóplatos planos en la pared. Desliza los brazos hacia arriba respirando hondo para revertir 20 años de hombros caídos y postura encorvada.",
+                benefit: "Objetivo: Joroba dorsal, cuello rígido y fatiga al final del día"
+            },
+            4: {
+                week: "Apéndice Maestro (Página 28)",
+                title: "21-Day Habit & Symptom Tracker",
+                badge: "Hoja Imprimible",
+                desc: "<strong>Cómo Funciona:</strong> Matriz diaria para marcar tu sesión de 5 minutos junto a la cafetera. Monitoriza cómo tu rigidez matutina pasa de 8/10 a 1/10 en 21 días con códigos QR a cada vídeo de Coach Elena.",
+                benefit: "Objetivo: Hábito consolidado de por vida sin recaídas"
             }
         };
 
@@ -713,7 +744,7 @@
                 <span>${data.benefit}</span>
             `;
 
-            [1, 2, 3].forEach(id => {
+            [1, 2, 3, 4].forEach(id => {
                 const btn = document.getElementById(`tab-preview-${id}`);
                 if (!btn) return;
                 if (id === pageId) {
